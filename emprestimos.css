@@ -1,0 +1,285 @@
+/* ================================================= */
+/* RESET BÁSICO DO CSS                               */
+/* Remove margens padrão do navegador                */
+/* ================================================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f4f6f9;
+}
+
+/* ================================================= */
+/* LAYOUT PRINCIPAL DO SISTEMA                       */
+/* Sidebar + conteúdo                                */
+/* ================================================= */
+
+.layout{
+display:flex;
+height:100vh;
+}
+
+/* ================================================= */
+/* SIDEBAR (MENU LATERAL)                            */
+/* ================================================= */
+
+.sidebar{
+width:260px;
+background:#243447;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+padding:25px;
+}
+
+.logo{
+display:flex;
+gap:10px;
+font-weight:bold;
+margin-bottom:30px;
+}
+
+.sidebar nav{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.sidebar nav a{
+display:flex;
+gap:10px;
+padding:10px;
+color:#cbd5e1;
+text-decoration:none;
+border-radius:6px;
+}
+
+.sidebar nav a:hover{
+background:#3b4c61;
+}
+
+.sidebar .active{
+background:#3b4c61;
+color:white;
+}
+
+/* ================================================= */
+/* CONTEÚDO PRINCIPAL                                */
+/* ================================================= */
+
+.content{
+flex:1;
+padding:40px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+/* ================================================= */
+/* BOTÃO CADASTRAR EMPRÉSTIMO                        */
+/* ================================================= */
+
+.btn-add{
+background:#2f66c3;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.btn-add:hover{
+background:#2555a7;
+}
+
+/* ================================================= */
+/* FILTROS DE BUSCA E STATUS                         */
+/* ================================================= */
+
+.filters{
+display:flex;
+gap:20px;
+margin-bottom:20px;
+}
+
+/* CAMPO DE BUSCA */
+
+.search{
+display:flex;
+align-items:center;
+background:white;
+padding:10px;
+border-radius:6px;
+width:350px;
+gap:10px;
+border:1px solid #ddd;
+}
+
+.search input{
+border:none;
+outline:none;
+width:100%;
+}
+
+/* SELECT DO FILTRO */
+
+.filtro-status{
+padding:10px 15px;
+border-radius:6px;
+border:1px solid #ddd;
+background:white;
+cursor:pointer;
+}
+
+/* ================================================= */
+/* TABELA DE EMPRÉSTIMOS                             */
+/* ================================================= */
+
+table{
+width:100%;
+background:white;
+border-radius:10px;
+overflow:hidden;
+border-collapse:collapse;
+}
+
+thead{
+background:#f1f3f6;
+}
+
+th,td{
+padding:15px;
+text-align:left;
+border-bottom:1px solid #eee;
+}
+
+/* ================================================= */
+/* STATUS DO EMPRÉSTIMO                              */
+/* ================================================= */
+
+.status{
+padding:5px 12px;
+border-radius:20px;
+font-size:13px;
+}
+
+.active{
+background:#2f66c3;
+color:white;
+}
+
+.closed{
+background:#d1d5db;
+color:#333;
+}
+
+/* ================================================= */
+/* TELA CADASTRAR EMPRÉSTIMO                         */
+/* Estiliza o formulário que abre quando             */
+/* o usuário clica em "Cadastrar Empréstimo"         */
+/* ================================================= */
+
+.cadastro-container{
+
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+}
+
+.cadastro-card{
+
+background:white;
+padding:40px;
+border-radius:10px;
+width:500px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+.cadastro-card h2{
+
+margin-bottom:10px;
+
+}
+
+.cadastro-card p{
+
+color:#666;
+margin-bottom:20px;
+
+}
+
+.cadastro-card label{
+
+display:block;
+margin-top:15px;
+font-weight:600;
+
+}
+
+.cadastro-card input,
+.cadastro-card select{
+
+width:100%;
+padding:10px;
+margin-top:5px;
+border:1px solid #ddd;
+border-radius:6px;
+
+}
+
+/* ================================================= */
+/* BOTÕES DO FORMULÁRIO                              */
+/* ================================================= */
+
+.botoes{
+
+margin-top:25px;
+display:flex;
+gap:10px;
+
+}
+
+.botoes button{
+
+flex:1;
+padding:10px;
+background:#2f66c3;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.botoes button:hover{
+
+background:#2555a7;
+
+}
+
+/* BOTÃO CANCELAR */
+
+.cancelar{
+
+flex:1;
+padding:10px;
+background:#d1d5db;
+text-align:center;
+border-radius:6px;
+text-decoration:none;
+color:black;
+
+}
