@@ -1,13 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - Impulso Financeiro</title>
+<title>Pagamentos - Impulso Financeiro</title>
 
 <link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="pagamentos.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,7 +20,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR PADRÃO DO SISTEMA -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -91,70 +93,109 @@ Sair
 
 </aside>
 
+
 <!-- CONTEÚDO -->
 
 <main class="content">
 
-<h1>Dashboard</h1>
+<div class="header">
+<h1>Pagamentos</h1>
+</div>
 
-<div class="cards">
+
+<!-- CARD REGISTRAR PAGAMENTO -->
 
 <div class="card">
 
-<div class="card-header">
-<span>Empréstimos Ativos</span>
-<i class="fa-solid fa-building-columns blue"></i>
+<h2>Registrar Pagamento</h2>
+
+<div class="form-grid">
+
+<div class="campo">
+<label>Contrato</label>
+<select>
+<option>Selecione o contrato</option>
+<option>Banco do Brasil</option>
+<option>Itaú</option>
+<option>BNDES</option>
+</select>
 </div>
 
-<div class="card-value">
-12
+<div class="campo">
+<label>Valor Pago</label>
+<input type="text" placeholder="R$ 0,00">
 </div>
 
+<div class="campo">
+<label>Data do Pagamento</label>
+<input type="date">
 </div>
 
-
-<div class="card">
-
-<div class="card-header">
-<span>Total da Dívida</span>
-<i class="fa-solid fa-dollar-sign red"></i>
+<div class="campo">
+<label>Juros / Encargos</label>
+<input type="text" placeholder="R$ 0,00">
 </div>
 
-<div class="card-value">
-R$ 4.250.000,00
-</div>
+<div class="botoes">
 
-</div>
-
-
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas Próximas</span>
-<i class="fa-solid fa-calendar-check orange"></i>
-</div>
-
-<div class="card-value">
-5
-</div>
-
-<p>Nos próximos 30 dias</p>
+<button class="btn-save">
+Registrar Pagamento
+</button>
 
 </div>
 
-
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas em Atraso</span>
-<i class="fa-solid fa-triangle-exclamation red"></i>
-</div>
-
-<div class="card-value">
-2
 </div>
 
 </div>
+
+
+<!-- CARD HISTÓRICO -->
+
+<div class="card" style="margin-top:20px;">
+
+<h2>Pagamentos Recentes</h2>
+
+<table class="tabela-pagamentos">
+
+<thead>
+
+<tr>
+
+<th>Contrato</th>
+<th>Valor Pago</th>
+<th>Data</th>
+<th>Juros/Encargos</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Banco do Brasil</td>
+<td>R$ 15.200,00</td>
+<td>05/02/2026</td>
+<td>R$ 1.200,00</td>
+</tr>
+
+<tr>
+<td>Itaú</td>
+<td>R$ 28.500,00</td>
+<td>15/02/2026</td>
+<td>R$ 3.100,00</td>
+</tr>
+
+<tr>
+<td>BNDES</td>
+<td>R$ 22.000,00</td>
+<td>01/02/2026</td>
+<td>R$ 1.800,00</td>
+</tr>
+
+</tbody>
+
+</table>
 
 </div>
 
@@ -163,5 +204,4 @@ R$ 4.250.000,00
 </div>
 
 </body>
-
 </html>

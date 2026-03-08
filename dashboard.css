@@ -13,7 +13,7 @@ background:#f3f4f6;
 
 .layout{
 display:flex;
-height:100vh;
+min-height:100vh;
 }
 
 /* Sidebar */

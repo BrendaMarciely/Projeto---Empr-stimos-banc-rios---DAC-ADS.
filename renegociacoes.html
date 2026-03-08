@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Renegociações - Impulso Financeiro</title>
+
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="renegociacoes.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="sidebar-top">
+
+<div class="logo">
+<i class="fa-solid fa-arrow-trend-up"></i>
+<span>Impulso Financeiro</span>
+</div>
+
+<nav>
+
+<a href="dashboard.html">
+<i class="fa-solid fa-table-columns"></i>
+Dashboard
+</a>
+
+<a href="emprestimos.html">
+<i class="fa-solid fa-building-columns"></i>
+Empréstimos
+</a>
+
+<a href="contratos.html">
+<i class="fa-solid fa-file-contract"></i>
+Contratos
+</a>
+
+<a href="cronograma.html">
+<i class="fa-solid fa-calendar"></i>
+Cronograma
+</a>
+
+<a href="desembolsos.html">
+<i class="fa-solid fa-money-bill"></i>
+Desembolsos
+</a>
+
+<a href="pagamentos.html">
+<i class="fa-solid fa-credit-card"></i>
+Pagamentos
+</a>
+
+<a href="renegociacoes.html">
+<i class="fa-solid fa-rotate"></i>
+Renegociações
+</a>
+
+<a href="notificacoes.html">
+<i class="fa-solid fa-bell"></i>
+Notificações
+</a>
+
+<a href="relatorios.html">
+<i class="fa-solid fa-chart-column"></i>
+Relatórios
+</a>
+
+</nav>
+
+</div>
+
+<div class="logout">
+
+<a href="index.html">
+<i class="fa-solid fa-right-from-bracket"></i>
+Sair
+</a>
+
+</div>
+
+</aside>
+
+
+<!-- CONTEÚDO -->
+
+<main class="content">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>Renegociar / Liquidar</h1>
+
+<a href="#" class="btn-add">
+<i class="fa-solid fa-plus"></i>
+Nova Renegociação
+</a>
+
+</div>
+
+
+<!-- FORMULÁRIO -->
+
+<section class="card">
+
+<h2>Registrar Renegociação ou Liquidação</h2>
+
+<form class="form-grid">
+
+<div class="campo">
+
+<label>Contrato</label>
+
+<select required>
+<option value="">Selecione o contrato</option>
+<option>Bradesco</option>
+<option>Santander</option>
+<option>Itaú</option>
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>Tipo</label>
+
+<select required>
+<option value="">Selecione</option>
+<option>Renegociação</option>
+<option>Liquidação</option>
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>Nova Taxa</label>
+
+<input type="text" placeholder="Ex: 10,5% a.a.">
+
+</div>
+
+
+<div class="campo">
+
+<label>Novo Prazo (meses)</label>
+
+<input type="number" placeholder="48">
+
+</div>
+
+
+<div class="campo-full">
+
+<label>Observações</label>
+
+<textarea placeholder="Detalhes da renegociação ou quitação..."></textarea>
+
+</div>
+
+
+<div class="botoes">
+
+<button type="submit" class="btn-save">
+Salvar
+</button>
+
+<a href="renegociacoes.html" class="btn-cancel">
+Cancelar
+</a>
+
+</div>
+
+</form>
+
+</section>
+
+
+<!-- HISTÓRICO -->
+
+<section class="card">
+
+<h2>Histórico</h2>
+
+<table class="tabela-renegociacoes">
+
+<thead>
+
+<tr>
+<th>Contrato</th>
+<th>Tipo</th>
+<th>Data</th>
+<th>Nova Taxa</th>
+<th>Novo Prazo</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Bradesco</td>
+<td>Renegociação</td>
+<td>10/01/2026</td>
+<td>10,5% a.a.</td>
+<td>48 meses</td>
+<td><span class="status aprovado">Aprovada</span></td>
+</tr>
+
+<tr>
+<td>Santander</td>
+<td>Liquidação</td>
+<td>20/01/2025</td>
+<td>—</td>
+<td>—</td>
+<td><span class="status concluida">Concluída</span></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+</main>
+
+</div>
+
+</body>
+</html>

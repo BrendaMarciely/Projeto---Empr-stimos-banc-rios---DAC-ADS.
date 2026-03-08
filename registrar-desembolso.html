@@ -1,13 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - Impulso Financeiro</title>
+<title>Novo Desembolso - Impulso Financeiro</title>
 
 <link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="desembolsos.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,11 +20,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR PADRÃO DO SISTEMA -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
-<div class="sidebar-top">
+<div>
 
 <div class="logo">
 <i class="fa-solid fa-arrow-trend-up"></i>
@@ -51,7 +53,7 @@ Contratos
 Cronograma
 </a>
 
-<a href="desembolsos.html">
+<a href="desembolsos.html" class="active">
 <i class="fa-solid fa-money-bill"></i>
 Desembolsos
 </a>
@@ -80,78 +82,73 @@ Relatórios
 
 </div>
 
-<div class="logout">
-
-<a href="index.html">
+<a href="index.html" class="logout">
 <i class="fa-solid fa-right-from-bracket"></i>
 Sair
 </a>
 
-</div>
-
 </aside>
+
 
 <!-- CONTEÚDO -->
 
 <main class="content">
 
-<h1>Dashboard</h1>
-
-<div class="cards">
-
-<div class="card">
-
-<div class="card-header">
-<span>Empréstimos Ativos</span>
-<i class="fa-solid fa-building-columns blue"></i>
-</div>
-
-<div class="card-value">
-12
-</div>
-
+<div class="header">
+<h1>Novo Desembolso</h1>
 </div>
 
 
 <div class="card">
 
-<div class="card-header">
-<span>Total da Dívida</span>
-<i class="fa-solid fa-dollar-sign red"></i>
+<h2>Registrar Desembolso</h2>
+
+<div class="form-grid">
+
+<div class="campo">
+<label>Contrato</label>
+<select>
+<option>Selecione o contrato</option>
+<option>BNDES</option>
+<option>Itaú</option>
+<option>Banco do Brasil</option>
+</select>
 </div>
 
-<div class="card-value">
-R$ 4.250.000,00
+<div class="campo">
+<label>Tipo de Liberação</label>
+<select>
+<option>Selecione</option>
+<option>Parcial</option>
+<option>Total</option>
+</select>
 </div>
 
+<div class="campo">
+<label>Valor Liberado</label>
+<input type="text" placeholder="R$ 0,00">
 </div>
 
-
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas Próximas</span>
-<i class="fa-solid fa-calendar-check orange"></i>
+<div class="campo">
+<label>Data da Liberação</label>
+<input type="date">
 </div>
 
-<div class="card-value">
-5
+<div class="campo-full">
+<label>Custos / Tarifas</label>
+<input type="text" placeholder="R$ 0,00">
 </div>
 
-<p>Nos próximos 30 dias</p>
+<div class="botoes">
 
-</div>
+<button class="btn-save">
+Salvar
+</button>
 
+<a href="desembolsos.html" class="btn-cancel">
+Cancelar
+</a>
 
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas em Atraso</span>
-<i class="fa-solid fa-triangle-exclamation red"></i>
-</div>
-
-<div class="card-value">
-2
 </div>
 
 </div>
@@ -163,5 +160,4 @@ R$ 4.250.000,00
 </div>
 
 </body>
-
 </html>

@@ -1,13 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - Impulso Financeiro</title>
+<title>Desembolsos - Impulso Financeiro</title>
 
 <link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="desembolsos.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,7 +20,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR PADRÃO DO SISTEMA -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -91,70 +93,90 @@ Sair
 
 </aside>
 
+
 <!-- CONTEÚDO -->
 
 <main class="content">
 
-<h1>Dashboard</h1>
+<div class="header">
 
-<div class="cards">
+<h1>Desembolsos</h1>
+
+<a href="registrar-desembolso.html" class="btn-add">
+<i class="fa-solid fa-plus"></i>
+Registrar Desembolso
+</a>
+
+</div>
+
+
+<!-- CARD HISTÓRICO -->
 
 <div class="card">
 
-<div class="card-header">
-<span>Empréstimos Ativos</span>
-<i class="fa-solid fa-building-columns blue"></i>
-</div>
+<h2>Histórico de Desembolsos</h2>
 
-<div class="card-value">
-12
-</div>
+<table class="tabela-desembolsos">
 
-</div>
+<thead>
 
+<tr>
 
-<div class="card">
+<th>Contrato</th>
+<th>Valor</th>
+<th>Data</th>
+<th>Tipo</th>
+<th>Custos</th>
 
-<div class="card-header">
-<span>Total da Dívida</span>
-<i class="fa-solid fa-dollar-sign red"></i>
-</div>
+</tr>
 
-<div class="card-value">
-R$ 4.250.000,00
-</div>
+</thead>
 
-</div>
+<tbody>
 
+<tr>
 
-<div class="card">
+<td>BNDES</td>
+<td>R$ 875.000,00</td>
+<td>01/09/2022</td>
+<td><span class="status parcial">Parcial</span></td>
+<td>R$ 8.750,00</td>
 
-<div class="card-header">
-<span>Parcelas Próximas</span>
-<i class="fa-solid fa-calendar-check orange"></i>
-</div>
+</tr>
 
-<div class="card-value">
-5
-</div>
+<tr>
 
-<p>Nos próximos 30 dias</p>
+<td>BNDES</td>
+<td>R$ 875.000,00</td>
+<td>01/12/2022</td>
+<td><span class="status parcial">Parcial</span></td>
+<td>R$ 8.750,00</td>
 
-</div>
+</tr>
 
+<tr>
 
-<div class="card">
+<td>Itaú</td>
+<td>R$ 1.200.000,00</td>
+<td>15/03/2024</td>
+<td><span class="status total">Total</span></td>
+<td>R$ 12.000,00</td>
 
-<div class="card-header">
-<span>Parcelas em Atraso</span>
-<i class="fa-solid fa-triangle-exclamation red"></i>
-</div>
+</tr>
 
-<div class="card-value">
-2
-</div>
+<tr>
 
-</div>
+<td>Banco do Brasil</td>
+<td>R$ 500.000,00</td>
+<td>01/01/2025</td>
+<td><span class="status total">Total</span></td>
+<td>R$ 5.000,00</td>
+
+</tr>
+
+</tbody>
+
+</table>
 
 </div>
 
