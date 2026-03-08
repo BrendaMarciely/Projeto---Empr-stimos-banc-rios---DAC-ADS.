@@ -1,0 +1,62 @@
+/* ================================= */
+/* CARD PADRÃO                       */
+/* ================================= */
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:10px;
+margin-top:25px;
+
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+
+}
+
+.card h2{
+
+margin-bottom:20px;
+font-size:20px;
+font-weight:600;
+
+}
+
+
+/* ================================= */
+/* TABELA RELATÓRIOS                 */
+/* ================================= */
+
+.tabela-relatorio{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+.tabela-relatorio thead{
+
+background:#f1f3f6;
+
+}
+
+.tabela-relatorio th{
+
+text-align:left;
+padding:15px;
+font-weight:600;
+color:#555;
+
+}
+
+.tabela-relatorio td{
+
+padding:15px;
+border-bottom:1px solid #eee;
+
+}
+
+.tabela-relatorio tr:hover{
+
+background:#f9fafb;
+
+}

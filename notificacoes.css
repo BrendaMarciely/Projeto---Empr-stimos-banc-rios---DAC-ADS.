@@ -1,0 +1,105 @@
+/* ================================= */
+/* CARD DE ALERTA ATRASADO           */
+/* ================================= */
+
+.alert-card{
+
+background:#fff1f1;
+border:1px solid #f5c2c2;
+
+}
+
+
+/* ================================= */
+/* ITEM DE ALERTA                    */
+/* ================================= */
+
+.alert-item{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:16px;
+margin-top:15px;
+
+border-radius:10px;
+border:1px solid #e5e7eb;
+
+background:white;
+
+}
+
+.alert-item p{
+
+font-size:15px;
+font-weight:500;
+color:#111827;
+margin-bottom:3px;
+
+}
+
+.alert-item span{
+
+font-size:13px;
+color:#6b7280;
+
+}
+
+
+/* ================================= */
+/* BADGES DE STATUS                  */
+/* ================================= */
+
+.status{
+
+padding:7px 16px;
+
+border-radius:20px;
+
+font-size:13px;
+font-weight:600;
+
+display:inline-flex;
+align-items:center;
+justify-content:center;
+
+min-width:90px;
+
+}
+
+
+/* ================================= */
+/* ATRASO                            */
+/* ================================= */
+
+.atraso{
+
+background:#dc2626;
+color:white;
+
+}
+
+
+/* ================================= */
+/* ATENÇÃO                           */
+/* ================================= */
+
+.atencao{
+
+background:#2563eb;
+color:white;
+
+}
+
+
+/* ================================= */
+/* NORMAL                            */
+/* ================================= */
+
+.normal{
+
+background:#d1d5db;
+color:#374151;
+
+}

@@ -1,13 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - Impulso Financeiro</title>
+<title>Nova Renegociação</title>
 
 <link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="renegociacoes.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -18,9 +20,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR PADRÃO DO SISTEMA -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
+
+<div class="sidebar-top">
 
 <div class="logo">
 <i class="fa-solid fa-arrow-trend-up"></i>
@@ -29,7 +33,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <nav>
 
-<a href="dashboard.html" class="active">
+<a href="dashboard.html">
 <i class="fa-solid fa-table-columns"></i>
 Dashboard
 </a>
@@ -76,6 +80,8 @@ Relatórios
 
 </nav>
 
+</div>
+
 <div class="logout">
 
 <a href="index.html">
@@ -87,70 +93,97 @@ Sair
 
 </aside>
 
+
 <!-- CONTEÚDO -->
 
 <main class="content">
 
-<h1>Dashboard</h1>
+<div class="header">
 
-<div class="cards">
-
-<div class="card">
-
-<div class="card-header">
-<span>Empréstimos Ativos</span>
-<i class="fa-solid fa-building-columns blue"></i>
-</div>
-
-<div class="card-value">
-12
-</div>
+<h1>Nova Renegociação</h1>
 
 </div>
 
 
 <div class="card">
 
-<div class="card-header">
-<span>Total da Dívida</span>
-<i class="fa-solid fa-dollar-sign red"></i>
-</div>
-
-<div class="card-value">
-R$ 4.250.000,00
-</div>
-
-</div>
+<h2>Registrar Renegociação ou Liquidação</h2>
 
 
-<div class="card">
+<form class="form-grid">
 
-<div class="card-header">
-<span>Parcelas Próximas</span>
-<i class="fa-solid fa-calendar-check orange"></i>
-</div>
+<div class="campo">
 
-<div class="card-value">
-5
-</div>
+<label>Contrato</label>
 
-<p>Nos próximos 30 dias</p>
+<select>
+
+<option>Selecione o contrato</option>
+<option>Bradesco</option>
+<option>Santander</option>
+<option>Itaú</option>
+
+</select>
 
 </div>
 
 
-<div class="card">
+<div class="campo">
 
-<div class="card-header">
-<span>Parcelas em Atraso</span>
-<i class="fa-solid fa-triangle-exclamation red"></i>
+<label>Tipo</label>
+
+<select>
+
+<option>Selecione</option>
+<option>Renegociação</option>
+<option>Liquidação</option>
+
+</select>
+
 </div>
 
-<div class="card-value">
-2
-</div>
+
+<div class="campo">
+
+<label>Nova Taxa</label>
+
+<input type="text" placeholder="Ex: 10,5% a.a.">
 
 </div>
+
+
+<div class="campo">
+
+<label>Novo Prazo (meses)</label>
+
+<input type="number" placeholder="48">
+
+</div>
+
+
+<div class="campo-full">
+
+<label>Observações</label>
+
+<textarea placeholder="Detalhes da renegociação ou quitação..."></textarea>
+
+</div>
+
+
+<div class="botoes">
+
+<button class="btn-save">
+Salvar
+</button>
+
+<a href="renegociacoes.html" class="btn-cancel">
+Cancelar
+</a>
+
+</div>
+
+
+</form>
 
 </div>
 
@@ -159,5 +192,4 @@ R$ 4.250.000,00
 </div>
 
 </body>
-
 </html>
