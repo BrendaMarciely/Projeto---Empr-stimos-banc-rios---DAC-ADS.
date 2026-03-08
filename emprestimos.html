@@ -8,6 +8,9 @@
 
 <title>Gestão de Empréstimos</title>
 
+<!-- AGORA USANDO O CSS PRINCIPAL DO SISTEMA e o adicional da tela empréstimos -->
+
+<link rel="stylesheet" href="dashboard.css">
 <link rel="stylesheet" href="emprestimos.css">
 
 <link rel="stylesheet"
@@ -19,15 +22,13 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR PADRÃO -->
 
 <aside class="sidebar">
 
 <div class="logo">
-
 <i class="fa-solid fa-arrow-trend-up"></i>
 <span>Impulso Financeiro</span>
-
 </div>
 
 <nav>
@@ -37,7 +38,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 Dashboard
 </a>
 
-<a href="emprestimos.html">
+<a href="emprestimos.html" class="active">
 <i class="fa-solid fa-building-columns"></i>
 Empréstimos
 </a>
@@ -47,32 +48,32 @@ Empréstimos
 Contratos
 </a>
 
-<a href="#">
+<a href="cronograma.html">
 <i class="fa-solid fa-calendar"></i>
 Cronograma
 </a>
 
-<a href="#">
+<a href="desembolsos.html">
 <i class="fa-solid fa-money-bill"></i>
 Desembolsos
 </a>
 
-<a href="#">
+<a href="pagamentos.html">
 <i class="fa-solid fa-credit-card"></i>
 Pagamentos
 </a>
 
-<a href="#">
+<a href="renegociacoes.html">
 <i class="fa-solid fa-rotate"></i>
 Renegociações
 </a>
 
-<a href="#">
+<a href="notificacoes.html">
 <i class="fa-solid fa-bell"></i>
 Notificações
 </a>
 
-<a href="#">
+<a href="relatorios.html">
 <i class="fa-solid fa-chart-column"></i>
 Relatórios
 </a>
@@ -82,10 +83,8 @@ Relatórios
 <div class="logout">
 
 <a href="index.html">
-
 <i class="fa-solid fa-right-from-bracket"></i>
 Sair
-
 </a>
 
 </div>
@@ -93,17 +92,13 @@ Sair
 </aside>
 
 
-<!-- CONTEÚDO PRINCIPAL -->
+<!-- CONTEÚDO -->
 
 <main class="content">
 
 <div class="header">
 
 <h1>Gestão de Empréstimos</h1>
-
-
-<!-- BOTÃO CADASTRAR EMPRÉSTIMO -->
-<!-- Redireciona para a tela de cadastro -->
 
 <button
 class="btn-add"
@@ -151,14 +146,12 @@ id="buscaCredor">
 <thead>
 
 <tr>
-
 <th>Credor</th>
 <th>Valor</th>
 <th>Taxa</th>
 <th>Data de Início</th>
 <th>Data de Término</th>
 <th>Status</th>
-
 </tr>
 
 </thead>
@@ -166,58 +159,48 @@ id="buscaCredor">
 <tbody id="tabelaEmprestimos">
 
 <tr>
-
 <td>Banco do Brasil</td>
 <td>R$ 500.000,00</td>
 <td>12,5% a.a.</td>
 <td>01/01/2025</td>
 <td>01/01/2028</td>
 <td><span class="status active">Ativo</span></td>
-
 </tr>
 
 <tr>
-
 <td>Itaú</td>
 <td>R$ 1.200.000,00</td>
 <td>10,8% a.a.</td>
 <td>15/03/2024</td>
 <td>15/03/2029</td>
 <td><span class="status active">Ativo</span></td>
-
 </tr>
 
 <tr>
-
 <td>Bradesco</td>
 <td>R$ 800.000,00</td>
 <td>11,2% a.a.</td>
 <td>10/06/2023</td>
 <td>10/06/2026</td>
 <td><span class="status active">Ativo</span></td>
-
 </tr>
 
 <tr>
-
 <td>BNDES</td>
 <td>R$ 1.750.000,00</td>
 <td>8,5% a.a.</td>
 <td>01/09/2022</td>
 <td>01/09/2027</td>
 <td><span class="status active">Ativo</span></td>
-
 </tr>
 
 <tr>
-
 <td>Santander</td>
 <td>R$ 350.000,00</td>
 <td>13,0% a.a.</td>
 <td>20/01/2023</td>
 <td>20/01/2025</td>
 <td><span class="status closed">Encerrado</span></td>
-
 </tr>
 
 </tbody>
@@ -233,24 +216,14 @@ id="buscaCredor">
 
 <script>
 
-/* campo de busca */
-
 const busca = document.getElementById("buscaCredor")
-
-/* filtro de status */
-
 const filtro = document.getElementById("filtroStatus")
-
-/* linhas da tabela */
-
 const linhas = document.querySelectorAll("#tabelaEmprestimos tr")
-
 
 function aplicarFiltro(){
 
 const texto = busca.value.toLowerCase()
 const statusSelecionado = filtro.value
-
 
 linhas.forEach(linha =>{
 
@@ -259,33 +232,19 @@ const status = linha.querySelector(".status").textContent.toLowerCase()
 
 let mostrar = true
 
-
-/* filtro por nome */
-
 if(!credor.includes(texto)){
-
 mostrar = false
-
 }
-
-
-/* filtro por status */
 
 if(statusSelecionado !== "todos" && status !== statusSelecionado){
-
 mostrar = false
-
 }
-
-
-/* mostra ou esconde */
 
 linha.style.display = mostrar ? "" : "none"
 
 })
 
 }
-
 
 busca.addEventListener("keyup", aplicarFiltro)
 filtro.addEventListener("change", aplicarFiltro)

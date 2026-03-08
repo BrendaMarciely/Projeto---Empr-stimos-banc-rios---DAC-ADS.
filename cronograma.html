@@ -6,10 +6,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cronograma</title>
+<title>Cronograma - Impulso Financeiro</title>
 
-<!-- reaproveitando o CSS existente -->
+<!-- CSS reaproveitado -->
 <link rel="stylesheet" href="emprestimos.css">
+<link rel="stylesheet" href="dashboard.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,15 +21,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR PADRÃO -->
 
-<div class="sidebar">
+<aside class="sidebar">
 
 <div>
 
 <div class="logo">
 <i class="fa-solid fa-arrow-trend-up"></i>
-Impulso Financeiro
+<span>Impulso Financeiro</span>
 </div>
 
 <nav>
@@ -87,17 +88,19 @@ Relatórios
 Sair
 </a>
 
-</div>
+</aside>
 
 
 <!-- CONTEÚDO -->
 
-<div class="content">
+<main class="content">
 
+<div class="header">
 <h1>Gerar Cronograma</h1>
+</div>
 
 
-<!-- CARD -->
+<!-- CARD PARÂMETROS -->
 
 <div class="card">
 
@@ -106,13 +109,17 @@ Sair
 <div class="filters">
 
 <select class="filtro-status">
+
 <option>Itaú - R$ 1.200.000</option>
 <option>Banco do Brasil - R$ 500.000</option>
+
 </select>
 
 <select class="filtro-status">
+
 <option>Price</option>
 <option>SAC</option>
+
 </select>
 
 </div>
@@ -124,23 +131,27 @@ Gerar Cronograma
 </div>
 
 
-<!-- TABELA -->
+<!-- CARD TABELA -->
 
-<div class="card">
+<div class="card" style="margin-top:20px;">
 
 <h2>Cronograma de Parcelas</h2>
 
 <table>
 
 <thead>
+
 <tr>
+
 <th>Parcela</th>
 <th>Vencimento</th>
 <th>Amortização</th>
 <th>Juros</th>
 <th>Total</th>
 <th>Saldo Devedor</th>
+
 </tr>
+
 </thead>
 
 <tbody>
@@ -178,7 +189,7 @@ Gerar Cronograma
 
 </div>
 
-</div>
+</main>
 
 </div>
 
