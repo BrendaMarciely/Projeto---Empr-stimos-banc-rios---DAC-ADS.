@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cronograma</title>
+
+<!-- reaproveitando o CSS existente -->
+<link rel="stylesheet" href="emprestimos.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div>
+
+<div class="logo">
+<i class="fa-solid fa-arrow-trend-up"></i>
+Impulso Financeiro
+</div>
+
+<nav>
+
+<a href="dashboard.html">
+<i class="fa-solid fa-table-columns"></i>
+Dashboard
+</a>
+
+<a href="emprestimos.html">
+<i class="fa-solid fa-building-columns"></i>
+Empréstimos
+</a>
+
+<a href="contratos.html">
+<i class="fa-solid fa-file-contract"></i>
+Contratos
+</a>
+
+<a href="cronograma.html" class="active">
+<i class="fa-solid fa-calendar"></i>
+Cronograma
+</a>
+
+<a href="#">
+<i class="fa-solid fa-money-bill"></i>
+Desembolsos
+</a>
+
+<a href="#">
+<i class="fa-solid fa-credit-card"></i>
+Pagamentos
+</a>
+
+<a href="#">
+<i class="fa-solid fa-rotate"></i>
+Renegociações
+</a>
+
+<a href="#">
+<i class="fa-solid fa-bell"></i>
+Notificações
+</a>
+
+<a href="#">
+<i class="fa-solid fa-chart-column"></i>
+Relatórios
+</a>
+
+</nav>
+
+</div>
+
+<a href="index.html" class="logout">
+<i class="fa-solid fa-right-from-bracket"></i>
+Sair
+</a>
+
+</div>
+
+
+<!-- CONTEÚDO -->
+
+<div class="content">
+
+<h1>Gerar Cronograma</h1>
+
+
+<!-- CARD -->
+
+<div class="card">
+
+<h2>Parâmetros do Cronograma</h2>
+
+<div class="filters">
+
+<select class="filtro-status">
+<option>Itaú - R$ 1.200.000</option>
+<option>Banco do Brasil - R$ 500.000</option>
+</select>
+
+<select class="filtro-status">
+<option>Price</option>
+<option>SAC</option>
+</select>
+
+</div>
+
+<button class="btn-add">
+Gerar Cronograma
+</button>
+
+</div>
+
+
+<!-- TABELA -->
+
+<div class="card">
+
+<h2>Cronograma de Parcelas</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Parcela</th>
+<th>Vencimento</th>
+<th>Amortização</th>
+<th>Juros</th>
+<th>Total</th>
+<th>Saldo Devedor</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>01/04/2026</td>
+<td>R$ 13.888,89</td>
+<td>R$ 3.541,67</td>
+<td>R$ 17.430,56</td>
+<td>R$ 486.111,11</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>01/05/2026</td>
+<td>R$ 13.888,89</td>
+<td>R$ 3.395,83</td>
+<td>R$ 17.284,72</td>
+<td>R$ 472.222,22</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>01/06/2026</td>
+<td>R$ 13.888,89</td>
+<td>R$ 3.250,00</td>
+<td>R$ 17.138,89</td>
+<td>R$ 458.333,33</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

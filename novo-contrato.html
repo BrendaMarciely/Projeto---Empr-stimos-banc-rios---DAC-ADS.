@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Novo Contrato | Impulso Financeiro</title>
+
+<link rel="stylesheet" href="contratos.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div>
+
+<div class="logo">
+<i class="fa-solid fa-arrow-trend-up"></i>
+Impulso Financeiro
+</div>
+
+<nav>
+
+<a href="dashboard.html">
+<i class="fa-solid fa-table-columns"></i>
+Dashboard
+</a>
+
+<a href="emprestimos.html">
+<i class="fa-solid fa-building-columns"></i>
+Empréstimos
+</a>
+
+<a class="active" href="contratos.html">
+<i class="fa-solid fa-file-contract"></i>
+Contratos
+</a>
+
+<a href="#"><i class="fa-solid fa-calendar"></i>Cronograma</a>
+<a href="#"><i class="fa-solid fa-money-bill"></i>Desembolsos</a>
+<a href="#"><i class="fa-solid fa-credit-card"></i>Pagamentos</a>
+<a href="#"><i class="fa-solid fa-rotate"></i>Renegociações</a>
+<a href="#"><i class="fa-solid fa-bell"></i>Notificações</a>
+<a href="#"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
+
+</nav>
+
+</div>
+
+<a href="index.html">
+<i class="fa-solid fa-right-from-bracket"></i>
+Sair
+</a>
+
+</div>
+
+
+<!-- CONTEÚDO -->
+
+<div class="content">
+
+<div class="header">
+
+<h1>Contratos</h1>
+
+<a href="novo-contrato.html" class="btn-add">
+<i class="fa-solid fa-plus"></i>
+Novo Contrato
+</a>
+
+</div>
+
+
+<!-- FORMULÁRIO -->
+
+<div class="card">
+
+<h2>Registrar Contrato</h2>
+
+<form class="form-grid">
+
+<div class="campo">
+<label>Credor</label>
+<input type="text" placeholder="Nome do credor">
+</div>
+
+<div class="campo">
+<label>Valor</label>
+<input type="text" placeholder="R$ 0,00">
+</div>
+
+<div class="campo">
+<label>Taxa</label>
+<input type="text" placeholder="Ex: 12,5% a.a.">
+</div>
+
+<div class="campo">
+<label>Indexador</label>
+<select>
+<option>Selecione</option>
+<option>CDI</option>
+<option>IPCA</option>
+<option>Selic</option>
+</select>
+</div>
+
+<div class="campo">
+<label>Prazo (meses)</label>
+<input type="number" value="36">
+</div>
+
+<div class="campo-full">
+<label>Observações</label>
+<textarea placeholder="Notas sobre o contrato, anexos, etc."></textarea>
+</div>
+
+<div class="botoes">
+
+<button class="btn-save">
+Salvar
+</button>
+
+<a href="contratos.html" class="btn-cancel">
+Cancelar
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+
+<!-- CARD DE CONTRATOS -->
+
+<div class="card">
+
+<h2>Contratos Registrados</h2>
+
+<p>
+Nenhum contrato registrado. Clique em "Novo Contrato" para começar.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
