@@ -1,48 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Impulso Financeiro - Login</title>
-  <link rel="stylesheet" href="style.css" />
-  
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Impulso Financeiro - Login</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="login-card">
+<div class="login-card">
 
-      <div class="logo-area">
-        <div class="logo-icon">↗</div>
-        <div>
-          <h1>Impulso Financeiro</h1>
-          <p>Controle de Empréstimos Bancários</p>
-        </div>
-      </div>
+<!-- Logo / título -->
 
-      <form>
+<div class="logo-area">
 
-      <label>E-mail</label>
-      <input type="email" placeholder="seu@email.com" required>
+<div class="logo-icon">↗</div>
 
-      <label>Senha</label>
-      <input type="password" placeholder="••••••••" required>
+<div>
+<h1>Impulso Financeiro</h1>
+<p>Controle de Empréstimos Bancários</p>
+</div>
 
-      <button type="button" onclick="window.location.href='dashboard.html'">
-      Entrar
+</div>
+
+
+<!-- Formulário de login -->
+
+<form id="loginForm">
+
+<label for="email">E-mail</label>
+<input 
+type="email"
+id="email"
+name="email"
+placeholder="seu@email.com"
+required
+>
+
+<label for="senha">Senha</label>
+<input 
+type="password"
+id="senha"
+name="senha"
+placeholder="••••••••"
+required
+>
+
+<button type="submit">
+Entrar
 </button>
 
 </form>
 
-      <div class="register">
-        Não tem uma conta?
-        <a href="cadastro.html">Criar cadastro</a>
-      </div>
 
-    </div>
+<!-- Link cadastro -->
 
-  </div>
+<div class="register">
+
+Não tem uma conta?
+<a href="cadastro.html">Criar cadastro</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Validação simples -->
+
+<script>
+
+/* captura o formulário */
+
+const form = document.getElementById("loginForm")
+
+form.addEventListener("submit", function(event){
+
+event.preventDefault()
+
+const email = document.getElementById("email").value
+const senha = document.getElementById("senha").value
+
+
+/* valida campos vazios */
+
+if(email === "" || senha === ""){
+
+alert("Por favor, preencha todos os campos.")
+
+return
+
+}
+
+
+/* redireciona para o sistema */
+
+window.location.href = "dashboard.html"
+
+})
+
+</script>
 
 </body>
 </html>
