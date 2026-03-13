@@ -15,13 +15,12 @@ background:#f4f6f9;
 
 .layout{
 display:flex;
-height:100vh;
+min-height:100vh;
 }
 
 /* SIDEBAR */
 
 .sidebar{
-
 width:260px;
 background:#243447;
 color:white;
@@ -29,130 +28,114 @@ display:flex;
 flex-direction:column;
 justify-content:space-between;
 padding:25px;
-
 }
 
 .logo{
-
 display:flex;
 gap:10px;
 font-weight:bold;
 margin-bottom:30px;
-
 }
 
 .sidebar nav{
-
 display:flex;
 flex-direction:column;
 gap:12px;
-
 }
 
 .sidebar nav a{
-
 display:flex;
 gap:10px;
 padding:12px;
 color:#cbd5e1;
 text-decoration:none;
 border-radius:6px;
-
 }
 
 .sidebar nav a:hover{
-
 background:#3b4c61;
-
 }
 
 .sidebar .active{
-
 background:#3b4c61;
 color:white;
-
 }
 
-.logout{
+/* LOGOUT */
 
+.logout a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px;
 color:#cbd5e1;
 text-decoration:none;
+border-radius:6px;
+}
 
+.logout a:hover{
+background:#3b4c61;
+color:white;
 }
 
 /* CONTEÚDO */
 
 .content{
-
 flex:1;
 padding:40px;
-
 }
 
 /* HEADER */
 
 .header{
-
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:25px;
-
 }
 
 .header h1{
-
 font-size:28px;
-
 }
 
-/* BOTÃO */
+/* BOTÃO ADD */
 
 .btn-add{
-
-background:#2f66c3;
+background: linear-gradient(90deg, #3b6edc, #2f5fbf);
 color:white;
-border:none;
-padding:12px 20px;
-border-radius:8px;
-cursor:pointer;
-display:flex;
+padding:12px 22px;
+border-radius:10px;
+text-decoration:none;
+font-weight:500;
+display:inline-flex;
 align-items:center;
-gap:8px;
-
+gap:10px;
+transition:0.3s;
 }
 
 .btn-add:hover{
-
-background:#2555a7;
-
+transform: translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.12);
 }
 
 /* CARD */
 
 .card{
-
 background:white;
 padding:30px;
 border-radius:10px;
 border:1px solid #e4e7ec;
-
 }
 
 .card h2{
-
 margin-bottom:15px;
-
 }
 
 .card p{
-
 color:#666;
-
 }
 
-
-/* FORMULÁRIO DE CONTRATO */
+/* FORMULÁRIO */
 
 .form-grid{
 display:grid;
