@@ -2,258 +2,162 @@
 <html lang="pt-BR">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Gestão de Empréstimos</title>
-
-<!-- AGORA USANDO O CSS PRINCIPAL DO SISTEMA e o adicional da tela empréstimos -->
-
-<link rel="stylesheet" href="dashboard.css">
-<link rel="stylesheet" href="emprestimos.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Empréstimos | Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="emprestimos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-<div class="layout">
-
-<!-- SIDEBAR PADRÃO -->
-
-<aside class="sidebar">
-
-<div class="sidebar-top">
-
-<div class="logo">
-<i class="fa-solid fa-arrow-trend-up"></i>
-<span>Impulso Financeiro</span>
-</div>
-
-<nav>
-
-<a href="dashboard.html">
-<i class="fa-solid fa-table-columns"></i>
-Dashboard
-</a>
-
-<a href="emprestimos.html">
-<i class="fa-solid fa-building-columns"></i>
-Empréstimos
-</a>
-
-<a href="contratos.html">
-<i class="fa-solid fa-file-contract"></i>
-Contratos
-</a>
-
-<a href="cronograma.html">
-<i class="fa-solid fa-calendar"></i>
-Cronograma
-</a>
-
-<a href="desembolsos.html">
-<i class="fa-solid fa-money-bill"></i>
-Desembolsos
-</a>
-
-<a href="pagamentos.html">
-<i class="fa-solid fa-credit-card"></i>
-Pagamentos
-</a>
-
-<a href="renegociacoes.html">
-<i class="fa-solid fa-rotate"></i>
-Renegociações
-</a>
-
-<a href="notificacoes.html">
-<i class="fa-solid fa-bell"></i>
-Notificações
-</a>
-
-<a href="relatorios.html">
-<i class="fa-solid fa-chart-column"></i>
-Relatórios
-</a>
-
-</nav>
-
-</div>
-
-<div class="logout">
-
-<a href="index.html">
-<i class="fa-solid fa-right-from-bracket"></i>
-Sair
-</a>
-
-</div>
-
-</aside>
-
-
-<!-- CONTEÚDO -->
-
-<main class="content">
-
-<div class="header">
-
-<h1>Gestão de Empréstimos</h1>
-
-<button
-class="btn-add"
-onclick="window.location.href='cadastro-emprestimo.html'">
-
-<i class="fa-solid fa-plus"></i>
-Cadastrar Empréstimo
-
-</button>
-
-</div>
-
-
-<!-- FILTROS -->
-
-<div class="filters">
-
-<div class="search">
-
-<i class="fa-solid fa-search"></i>
-
-<input
-type="text"
-placeholder="Buscar por credor..."
-id="buscaCredor">
-
-</div>
-
-
-<select id="filtroStatus" class="filtro-status">
-
-<option value="todos">Todos</option>
-<option value="ativo">Ativo</option>
-<option value="encerrado">Encerrado</option>
-
-</select>
-
-</div>
-
-
-<!-- TABELA -->
-
-<table>
-
-<thead>
-
-<tr>
-<th>Credor</th>
-<th>Valor</th>
-<th>Taxa</th>
-<th>Data de Início</th>
-<th>Data de Término</th>
-<th>Status</th>
-</tr>
-
-</thead>
-
-<tbody id="tabelaEmprestimos">
-
-<tr>
-<td>Banco do Brasil</td>
-<td>R$ 500.000,00</td>
-<td>12,5% a.a.</td>
-<td>01/01/2025</td>
-<td>01/01/2028</td>
-<td><span class="status active">Ativo</span></td>
-</tr>
-
-<tr>
-<td>Itaú</td>
-<td>R$ 1.200.000,00</td>
-<td>10,8% a.a.</td>
-<td>15/03/2024</td>
-<td>15/03/2029</td>
-<td><span class="status active">Ativo</span></td>
-</tr>
-
-<tr>
-<td>Bradesco</td>
-<td>R$ 800.000,00</td>
-<td>11,2% a.a.</td>
-<td>10/06/2023</td>
-<td>10/06/2026</td>
-<td><span class="status active">Ativo</span></td>
-</tr>
-
-<tr>
-<td>BNDES</td>
-<td>R$ 1.750.000,00</td>
-<td>8,5% a.a.</td>
-<td>01/09/2022</td>
-<td>01/09/2027</td>
-<td><span class="status active">Ativo</span></td>
-</tr>
-
-<tr>
-<td>Santander</td>
-<td>R$ 350.000,00</td>
-<td>13,0% a.a.</td>
-<td>20/01/2023</td>
-<td>20/01/2025</td>
-<td><span class="status closed">Encerrado</span></td>
-</tr>
-
-</tbody>
-
-</table>
-
-</main>
-
-</div>
-
-
-<!-- SCRIPT DE FILTRO -->
-
-<script>
-
-const busca = document.getElementById("buscaCredor")
-const filtro = document.getElementById("filtroStatus")
-const linhas = document.querySelectorAll("#tabelaEmprestimos tr")
-
-function aplicarFiltro(){
-
-const texto = busca.value.toLowerCase()
-const statusSelecionado = filtro.value
-
-linhas.forEach(linha =>{
-
-const credor = linha.children[0].textContent.toLowerCase()
-const status = linha.querySelector(".status").textContent.toLowerCase()
-
-let mostrar = true
-
-if(!credor.includes(texto)){
-mostrar = false
-}
-
-if(statusSelecionado !== "todos" && status !== statusSelecionado){
-mostrar = false
-}
-
-linha.style.display = mostrar ? "" : "none"
-
-})
-
-}
-
-busca.addEventListener("keyup", aplicarFiltro)
-filtro.addEventListener("change", aplicarFiltro)
-
-</script>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>Impulso Financeiro</span>
+                </div>
+                <nav>
+                    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+                    <a href="emprestimos.html" class="active"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
+                    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
+                    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
+                    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
+                    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
+                    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
+                    <a href="notificacoes.html"><i class="fa-solid fa-bell"></i> Notificações</a>
+                    <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+                </nav>
+            </div>
+            <div class="logout">
+                <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="header">
+                <h1>Gestão de Empréstimos</h1>
+                <button class="btn-add" onclick="window.location.href='cadastro-emprestimo.html'">
+                    <i class="fa-solid fa-plus"></i> Cadastrar Empréstimo
+                </button>
+            </div>
+
+            <div class="filters">
+                <div class="search">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Buscar por credor..." id="buscaCredor">
+                </div>
+                <select id="filtroStatus" class="filtro-status">
+                    <option value="todos">Todos</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="encerrado">Encerrado</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Credor</th>
+                        <th>Valor</th>
+                        <th>Taxa</th>
+                        <th>Início</th>
+                        <th>Término</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaEmprestimos">
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+        // --- FUNÇÃO PARA CARREGAR DADOS DO BACKEND ---
+        async function carregarEmprestimos() {
+            try {
+                const resposta = await fetch("http://127.0.0.1:5000/listar_emprestimos");
+                const dados = await resposta.json();
+                const tabela = document.getElementById("tabelaEmprestimos");
+                tabela.innerHTML = "";
+
+                dados.forEach(emp => {
+                    const dataInicio = new Date(emp.data).toLocaleDateString("pt-BR");
+                    const dataFim = new Date(emp.vencimento).toLocaleDateString("pt-BR");
+
+                    const statusClass = emp.status.toLowerCase() === 'ativo' ? 'active' : 'inactive';
+
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${emp.credor}</td>
+                            <td>R$ ${Number(emp.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
+                            <td>${emp.taxa_juros}% a.a.</td>
+                            <td>${dataInicio}</td>
+                            <td>${dataFim}</td>
+                            <td><span class="status ${statusClass}">${emp.status}</span></td>
+                            <td>
+                                <button class="btn-action edit" onclick="editarEmprestimo(${emp.emprestimo_id})" title="Editar">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="excluirEmprestimo(${emp.emprestimo_id})" title="Excluir">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.log(e);
+                alert("Erro ao carregar empréstimos");
+            }
+        }
+
+        // --- FUNÇÃO PARA REDIRECIONAR PARA EDIÇÃO ---
+        function editarEmprestimo(id) {
+            // Manda o usuário para a nova tela levando o ID na URL
+            window.location.href = `editar-emprestimo.html?id=${id}`;
+        }
+
+        // --- FUNÇÃO PARA EXCLUIR ---
+        async function excluirEmprestimo(id) {
+            if (confirm("Tem certeza que deseja excluir este empréstimo?")) {
+                try {
+                    const resposta = await fetch(`http://127.0.0.1:5000/excluir_emprestimo/${id}`, {
+                        method: 'DELETE'
+                    });
+                    const resultado = await resposta.json();
+
+                    alert(resultado.msg);
+                    carregarEmprestimos();
+                } catch (e) {
+                    alert("Erro ao excluir empréstimo.");
+                }
+            }
+        }
+
+        // --- FUNÇÃO PARA FILTROS ---
+        function aplicarFiltro() {
+            const texto = document.getElementById("buscaCredor").value.toLowerCase();
+            const statusSelecionado = document.getElementById("filtroStatus").value;
+            const linhas = document.querySelectorAll("#tabelaEmprestimos tr");
+
+            linhas.forEach(linha => {
+                const credor = linha.children[0].textContent.toLowerCase();
+                const status = linha.children[5].textContent.toLowerCase();
+                let mostrar = credor.includes(texto);
+                if (statusSelecionado !== "todos" && status !== statusSelecionado) mostrar = false;
+                linha.style.display = mostrar ? "" : "none";
+            });
+        }
+
+        document.getElementById("buscaCredor").addEventListener("keyup", aplicarFiltro);
+        document.getElementById("filtroStatus").addEventListener("change", aplicarFiltro);
+
+        carregarEmprestimos();
+    </script>
 
 </body>
+
 </html>

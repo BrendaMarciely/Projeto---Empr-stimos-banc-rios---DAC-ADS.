@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Empréstimo | Impulso Financeiro</title>
+    <link rel="stylesheet" href="emprestimos.css"> </head>
+<body class="cadastro-container">
+    <div class="cadastro-card">
+        <h2>Editar Empréstimo</h2>
+        <p>Altere os dados abaixo e clique em salvar.</p>
+
+        <form id="formEditar">
+            <label>Credor</label>
+            <input type="text" id="credor" required>
+
+            <label>Valor (R$)</label>
+            <input type="number" id="valor" step="0.01" required>
+
+            <label>Taxa de Juros (%)</label>
+            <input type="number" id="taxa" step="0.01" required>
+
+            <label>Data de Início</label>
+            <input type="date" id="data" required>
+
+            <label>Data de Término</label>
+            <input type="date" id="vencimento" required>
+
+            <label>Status</label>
+            <select id="status">
+                <option value="Ativo">Ativo</option>
+                <option value="Encerrado">Encerrado</option>
+            </select>
+
+            <div class="botoes">
+                <button type="button" onclick="salvarEdicao()">Salvar Alterações</button>
+                <a href="emprestimos.html" class="cancelar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 1. Pega o ID que veio na URL (ex: ?id=5)
+        const urlParams = new URLSearchParams(window.location.search);
+        const emprestimoId = urlParams.get('id');
+
+        // 2. Assim que a tela abre, busca os dados no banco para preencher os campos
+        async function carregarDados() {
+            const resposta = await fetch(`http://127.0.0.1:5000/emprestimo/${emprestimoId}`);
+            const emp = await resposta.json();
+
+            document.getElementById("credor").value = emp.credor;
+            document.getElementById("valor").value = emp.valor;
+            document.getElementById("taxa").value = emp.taxa_juros;
+            document.getElementById("data").value = emp.data.split('T')[0];
+            document.getElementById("vencimento").value = emp.vencimento.split('T')[0];
+            document.getElementById("status").value = emp.status;
+        }
+
+        // 3. Envia os novos dados para o banco (o UPDATE)
+        async function salvarEdicao() {
+            const dados = {
+                credor: document.getElementById("credor").value,
+                valor: document.getElementById("valor").value,
+                taxa: document.getElementById("taxa").value,
+                data: document.getElementById("data").value,
+                vencimento: document.getElementById("vencimento").value,
+                status: document.getElementById("status").value
+            };
+
+            const resposta = await fetch(`http://127.0.0.1:5000/editar_emprestimo/${emprestimoId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            const res = await resposta.json();
+            alert(res.msg);
+            window.location.href = "emprestimos.html";
+        }
+
+        window.onload = carregarDados;
+    </script>
+</body>
+</html>

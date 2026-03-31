@@ -113,32 +113,34 @@ Sair
 
 <div class="campo">
 <label>Contrato</label>
-<select>
-<option>Selecione o contrato</option>
-<option>Banco do Brasil</option>
-<option>Itaú</option>
-<option>BNDES</option>
+<select id="contratoSelect">
+<option value="">Selecione o contrato</option>
+<option value="Banco do Brasil">Banco do Brasil</option>
+<option value="Itaú">Itaú</option>
+<option value="Bradesco">Bradesco</option>
+<option value="BNDES">BNDES</option>
+<option value="Santander">Santander</option>
 </select>
 </div>
 
 <div class="campo">
 <label>Valor Pago</label>
-<input type="text" placeholder="R$ 0,00">
+<input type="number" id="valorPago">
 </div>
 
 <div class="campo">
 <label>Data do Pagamento</label>
-<input type="date">
+<input type="date" id="dataPagamento">
 </div>
 
 <div class="campo">
 <label>Juros / Encargos</label>
-<input type="text" placeholder="R$ 0,00">
+<input type="number" id="juros">
 </div>
 
 <div class="botoes">
 
-<button class="btn-save">
+<button class="btn-save" onclick="registrarPagamento()">
 Registrar Pagamento
 </button>
 
@@ -170,29 +172,7 @@ Registrar Pagamento
 
 </thead>
 
-<tbody>
-
-<tr>
-<td>Banco do Brasil</td>
-<td>R$ 15.200,00</td>
-<td>05/02/2026</td>
-<td>R$ 1.200,00</td>
-</tr>
-
-<tr>
-<td>Itaú</td>
-<td>R$ 28.500,00</td>
-<td>15/02/2026</td>
-<td>R$ 3.100,00</td>
-</tr>
-
-<tr>
-<td>BNDES</td>
-<td>R$ 22.000,00</td>
-<td>01/02/2026</td>
-<td>R$ 1.800,00</td>
-</tr>
-
+<tbody id="tabelaPagamentos">
 </tbody>
 
 </table>
@@ -202,6 +182,62 @@ Registrar Pagamento
 </main>
 
 </div>
+
+
+
+<script>
+
+
+async function registrarPagamento(){
+
+const credor = document.getElementById("contratoSelect").value
+const valor = document.getElementById("valorPago").value
+const data = document.getElementById("dataPagamento").value
+
+const resposta = await fetch("http://127.0.0.1:5000/registrar_pagamento",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify({ credor, valor, data })
+})
+
+const dados = await resposta.json()
+
+alert(dados.msg)
+
+carregarPagamentos()
+
+}
+
+async function carregarPagamentos(){
+
+const tabela = document.getElementById("tabelaPagamentos")
+
+const resposta = await fetch("http://127.0.0.1:5000/listar_pagamentos")
+const dados = await resposta.json()
+
+tabela.innerHTML = ""
+
+dados.forEach(p=>{
+tabela.innerHTML += `
+<tr>
+<td>${p.credor}</td>
+<td>${p.valor}</td>
+<td>${p.data}</td>
+<td>${p.juros}</td>
+</tr>
+`
+})
+
+}
+
+carregarPagamentos()
+
+</script>
+
+
+
+
+
 
 </body>
 </html>

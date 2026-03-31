@@ -36,6 +36,7 @@
 <form id="loginForm">
 
 <label for="email">E-mail</label>
+
 <input 
 type="email"
 id="email"
@@ -74,36 +75,60 @@ Não tem uma conta?
 </div>
 
 
-<!-- Validação simples -->
-
 <script>
-
-/* captura o formulário */
 
 const form = document.getElementById("loginForm")
 
-form.addEventListener("submit", function(event){
+form.addEventListener("submit", async function(event){
 
 event.preventDefault()
 
-const email = document.getElementById("email").value
+const login = document.getElementById("email").value
 const senha = document.getElementById("senha").value
 
+if(login === "" || senha === ""){
+    alert("Por favor, preencha todos os campos.")
+    return
+}
 
-/* valida campos vazios */
+try{
 
-if(email === "" || senha === ""){
+const resposta = await fetch("http://127.0.0.1:5000/login",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+login,
+senha
+})
+})
 
-alert("Por favor, preencha todos os campos.")
+const dados = await resposta.json()
 
-return
+if(dados.msg === "ok"){
+
+// ⭐ salva usuário logado no navegador
+localStorage.setItem(
+"usuarioLogado",
+JSON.stringify(dados.usuario)
+)
+
+// redireciona
+window.location.href = "dashboard.html"
+
+}else{
+
+alert("Usuário ou senha inválidos")
 
 }
 
+}catch(e){
 
-/* redireciona para o sistema */
+alert("Erro ao conectar com o servidor")
+console.log(e)
 
-window.location.href = "dashboard.html"
+}
 
 })
 

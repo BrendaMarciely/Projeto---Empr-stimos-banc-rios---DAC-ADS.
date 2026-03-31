@@ -184,60 +184,57 @@ color:#333;
 }
 
 /* ================================================= */
-/* TELA CADASTRAR EMPRÉSTIMO                         */
-/* Estiliza o formulário que abre quando             */
-/* o usuário clica em "Cadastrar Empréstimo"         */
+/* TELA CADASTRAR EMPRÉSTIMO        */
 /* ================================================= */
 
-.cadastro-container{
-
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    
+    /* IMAGEM DE FUNDO: Prédios corporativos com tom azulado */
+    background: 
+        linear-gradient(135deg, rgba(30, 58, 138, 0.85), rgba(17, 24, 39, 0.95)),
+        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070') no-repeat center center;
+    
+    background-size: cover;
+    background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
 }
 
-.cadastro-card{
-
-background:white;
-padding:40px;
-border-radius:10px;
-width:500px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
-
+.cadastro-card {
+    background: white;
+    padding: 40px;
+    border-radius: 16px; /* Bordas um pouco mais arredondadas */
+    width: 100%;
+    max-width: 500px; /* Melhor para responsividade */
+    
+    /* Sombra mais suave e profunda para dar elevação */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 }
 
-.cadastro-card h2{
-
-margin-bottom:10px;
-
-}
-
-.cadastro-card p{
-
-color:#666;
-margin-bottom:20px;
-
-}
-
-.cadastro-card label{
-
-display:block;
-margin-top:15px;
-font-weight:600;
-
-}
-
+/* Ajuste nos inputs para combinarem com a foto*/
 .cadastro-card input,
-.cadastro-card select{
+.cadastro-card select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-width:100%;
-padding:10px;
-margin-top:5px;
-border:1px solid #ddd;
-border-radius:6px;
+.cadastro-card input:focus {
+    outline: none;
+    border-color: #2f66c3;
+    box-shadow: 0 0 0 3px rgba(47, 102, 195, 0.2);
+}
 
+.cadastro-card h2 {
+    color: #1e293b;
+    font-size: 24px;
+    margin-bottom: 5px;
 }
 
 /* ================================================= */
@@ -284,5 +281,23 @@ color:black;
 
 }
 
+/* Botões de Ação na Tabela */
+.btn-action {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: 0.3s;
+}
 
+.btn-action.edit { color: #2563eb; }
+.btn-action.edit:hover { color: #1d4ed8; transform: scale(1.1); }
+
+.btn-action.delete { color: #dc2626; }
+.btn-action.delete:hover { color: #b91c1c; transform: scale(1.1); }
+
+/* Status dinâmico */
+.status.active { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.status.inactive { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 

@@ -1,170 +1,131 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard - Impulso Financeiro</title>
-
-<link rel="stylesheet" href="dashboard.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-<div class="layout">
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>Impulso Financeiro</span>
+            </div>
+            <nav>
+                <a href="dashboard.html" class="active"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+                <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
+                <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
+                <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
+                <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
+                <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
+                <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
+                <a href="notificacoes.html"><i class="fa-solid fa-bell"></i> Notificações</a>
+                <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+            </nav>
+            <div class="logout">
+                <a href="#" onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sair
+                </a>
+            </div>
+        </aside>
 
-<!-- SIDEBAR PADRÃO DO SISTEMA -->
+        <main class="content">
+            <div class="banner-dashboard">
+                <div class="banner-texto">
+                    <h1>Dashboard</h1>
+                    <p>Visão geral dos seus empréstimos e finanças.</p>
+                    <p id="bemVindoUsuario" style="font-weight: bold; margin-top: 10px;"></p>
+                </div>
+            </div>
 
-<aside class="sidebar">
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <span>Empréstimos Ativos</span>
+                        <i class="fa-solid fa-building-columns blue"></i>
+                    </div>
+                    <div class="card-value" id="cardTotalPedidos">
+                        0
+                    </div>
+                </div>
 
-<div class="logo">
-<i class="fa-solid fa-arrow-trend-up"></i>
-<span>Impulso Financeiro</span>
-</div>
+                <div class="card">
+                    <div class="card-header">
+                        <span>Total da Dívida</span>
+                        <i class="fa-solid fa-dollar-sign red"></i>
+                    </div>
+                    <div class="card-value" id="cardSomaTotal">
+                        R$ 0,00
+                    </div>
+                </div>
 
-<nav>
+                <div class="card">
+                    <div class="card-header">
+                        <span>Parcelas Próximas</span>
+                        <i class="fa-solid fa-calendar-check orange"></i>
+                    </div>
+                    <div class="card-value">
+                        5
+                    </div>
+                    <p>Nos próximos 30 dias</p>
+                </div>
 
-<a href="dashboard.html" class="active">
-<i class="fa-solid fa-table-columns"></i>
-Dashboard
-</a>
+                <div class="card">
+                    <div class="card-header">
+                        <span>Bancos Parceiros</span>
+                        <i class="fa-solid fa-landmark blue"></i>
+                    </div>
+                    <div class="card-value" id="cardQtdCredores">
+                        0
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-<a href="emprestimos.html">
-<i class="fa-solid fa-building-columns"></i>
-Empréstimos
-</a>
+    <script>
+        // ⭐ MOSTRAR NOME DO USUÁRIO
+        const usuarioObj = JSON.parse(localStorage.getItem("usuarioLogado"))
+        if (usuarioObj) {
+            document.getElementById("bemVindoUsuario").innerText = "Bem-vinda, " + usuarioObj.nome
+        }
 
-<a href="contratos.html">
-<i class="fa-solid fa-file-contract"></i>
-Contratos
-</a>
+        // ⭐ CARREGAR DADOS REAIS DO BANCO
+        async function carregarDashboard() {
+            try {
+                const resposta = await fetch("http://127.0.0.1:5000/dashboard_resumo");
+                const dados = await resposta.json();
 
-<a href="cronograma.html">
-<i class="fa-solid fa-calendar"></i>
-Cronograma
-</a>
+                // Atualiza os Cards com os dados do Backend
+                document.getElementById("cardTotalPedidos").innerText = dados.total_pedidos || 0;
+                document.getElementById("cardQtdCredores").innerText = dados.total_credores || 0;
 
-<a href="desembolsos.html">
-<i class="fa-solid fa-money-bill"></i>
-Desembolsos
-</a>
+                const valorTotal = Number(dados.soma_total || 0).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
+                document.getElementById("cardSomaTotal").innerText = valorTotal;
 
-<a href="pagamentos.html">
-<i class="fa-solid fa-credit-card"></i>
-Pagamentos
-</a>
+            } catch (e) {
+                console.error("Erro ao carregar dashboard:", e);
+            }
+        }
 
-<a href="renegociacoes.html">
-<i class="fa-solid fa-rotate"></i>
-Renegociações
-</a>
+        // ⭐ LOGOUT REAL
+        function logout() {
+            localStorage.removeItem("usuarioLogado")
+            window.location.href = "index.html"
+        }
 
-<a href="notificacoes.html">
-<i class="fa-solid fa-bell"></i>
-Notificações
-</a>
-
-<a href="relatorios.html">
-<i class="fa-solid fa-chart-column"></i>
-Relatórios
-</a>
-
-</nav>
-
-<div class="logout">
-
-<a href="index.html">
-<i class="fa-solid fa-right-from-bracket"></i>
-Sair
-</a>
-
-</div>
-
-</aside>
-
-<!-- CONTEÚDO -->
-
-<main class="content">
-<!-- BANNER DE BOAS-VINDAS -->
-<div class="banner-dashboard">
-
-<div class="banner-texto">
-<h1>Dashboard</h1>
-<p>Visão geral dos seus empréstimos e finanças</p>
-</div>
-
-</div>
-
-<div class="cards">
-
-<div class="card">
-
-<div class="card-header">
-<span>Empréstimos Ativos</span>
-<i class="fa-solid fa-building-columns blue"></i>
-</div>
-
-<div class="card-value">
-12
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-header">
-<span>Total da Dívida</span>
-<i class="fa-solid fa-dollar-sign red"></i>
-</div>
-
-<div class="card-value">
-R$ 4.250.000,00
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas Próximas</span>
-<i class="fa-solid fa-calendar-check orange"></i>
-</div>
-
-<div class="card-value">
-5
-</div>
-
-<p>Nos próximos 30 dias</p>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-header">
-<span>Parcelas em Atraso</span>
-<i class="fa-solid fa-triangle-exclamation red"></i>
-</div>
-
-<div class="card-value">
-2
-</div>
-
-</div>
-
-</div>
-
-</main>
-
-</div>
+        // Iniciar carregamento
+        window.onload = carregarDashboard;
+    </script>
 
 </body>
-
 </html>

@@ -2,265 +2,145 @@
 <html lang="pt-BR">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Relatórios - Impulso Financeiro</title>
-
-<link rel="stylesheet" href="dashboard.css">
-<link rel="stylesheet" href="relatorios.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="relatorios.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-<div class="layout">
-
-<!-- SIDEBAR -->
-
-<aside class="sidebar">
-
-<div class="sidebar-top">
-
-<div class="logo">
-<i class="fa-solid fa-arrow-trend-up"></i>
-<span>Impulso Financeiro</span>
-</div>
-
-<nav>
-
-<a href="dashboard.html">
-<i class="fa-solid fa-table-columns"></i>
-Dashboard
-</a>
-
-<a href="emprestimos.html">
-<i class="fa-solid fa-building-columns"></i>
-Empréstimos
-</a>
-
-<a href="contratos.html">
-<i class="fa-solid fa-file-contract"></i>
-Contratos
-</a>
-
-<a href="cronograma.html">
-<i class="fa-solid fa-calendar"></i>
-Cronograma
-</a>
-
-<a href="desembolsos.html">
-<i class="fa-solid fa-money-bill"></i>
-Desembolsos
-</a>
-
-<a href="pagamentos.html">
-<i class="fa-solid fa-credit-card"></i>
-Pagamentos
-</a>
-
-<a href="renegociacoes.html">
-<i class="fa-solid fa-rotate"></i>
-Renegociações
-</a>
-
-<a href="notificacoes.html">
-<i class="fa-solid fa-bell"></i>
-Notificações
-</a>
-
-<a href="relatorios.html">
-<i class="fa-solid fa-chart-column"></i>
-Relatórios
-</a>
-
-</nav>
-
-</div>
-
-<div class="logout">
-
-<a href="index.html">
-<i class="fa-solid fa-right-from-bracket"></i>
-Sair
-</a>
-
-</div>
-
-</aside>
-
-
-<!-- CONTEÚDO -->
-
-<main class="content">
-
-<h1>Relatórios</h1>
-
-
-<!-- DÍVIDA POR CREDOR -->
-
-<div class="card">
-
-<h2>Dívida por Credor</h2>
-
-<table class="tabela-relatorio">
-
-<thead>
-<tr>
-<th>Credor</th>
-<th>Saldo Devedor</th>
-<th>% do Total</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr>
-<td>Banco do Brasil</td>
-<td>R$ 420.000,00</td>
-<td>9,9%</td>
-</tr>
-
-<tr>
-<td>Itaú</td>
-<td>R$ 1.080.000,00</td>
-<td>25,4%</td>
-</tr>
-
-<tr>
-<td>Bradesco</td>
-<td>R$ 640.000,00</td>
-<td>15,1%</td>
-</tr>
-
-<tr>
-<td>BNDES</td>
-<td>R$ 1.500.000,00</td>
-<td>35,3%</td>
-</tr>
-
-<tr>
-<td>Santander</td>
-<td>R$ 610.000,00</td>
-<td>14,3%</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-
-<!-- FLUXO DE CAIXA -->
-
-<div class="card">
-
-<h2>Fluxo de Caixa</h2>
-
-<table class="tabela-relatorio">
-
-<thead>
-<tr>
-<th>Mês</th>
-<th>Entradas</th>
-<th>Saídas</th>
-<th>Saldo</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr>
-<td>Mar/2026</td>
-<td>R$ 180.000,00</td>
-<td>R$ 95.000,00</td>
-<td>R$ 85.000,00</td>
-</tr>
-
-<tr>
-<td>Abr/2026</td>
-<td>R$ 180.000,00</td>
-<td>R$ 120.000,00</td>
-<td>R$ 60.000,00</td>
-</tr>
-
-<tr>
-<td>Mai/2026</td>
-<td>R$ 180.000,00</td>
-<td>R$ 88.000,00</td>
-<td>R$ 92.000,00</td>
-</tr>
-
-<tr>
-<td>Jun/2026</td>
-<td>R$ 180.000,00</td>
-<td>R$ 105.000,00</td>
-<td>R$ 75.000,00</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-
-<!-- CUSTO MÉDIO -->
-
-<div class="card">
-
-<h2>Custo Médio da Dívida</h2>
-
-<table class="tabela-relatorio">
-
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Custo</th>
-<th>Peso na Carteira</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr>
-<td>Pré-fixado</td>
-<td>12,1% a.a.</td>
-<td>35%</td>
-</tr>
-
-<tr>
-<td>CDI + spread</td>
-<td>CDI + 2,5%</td>
-<td>40%</td>
-</tr>
-
-<tr>
-<td>IPCA + spread</td>
-<td>IPCA + 5,2%</td>
-<td>15%</td>
-</tr>
-
-<tr>
-<td>TJLP</td>
-<td>7,5% a.a.</td>
-<td>10%</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</main>
-
-</div>
-
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    <span>Impulso Financeiro</span>
+                </div>
+                <nav>
+                    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+                    <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
+                    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
+                    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
+                    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
+                    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
+                    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
+                    <a href="notificacoes.html"><i class="fa-solid fa-bell"></i> Notificações</a>
+                    <a href="relatorios.html" class="active"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+                </nav>
+            </div>
+            <div class="logout">
+                <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <h1>Relatórios</h1>
+
+            <div class="card">
+                <h2>Dívida por Credor</h2>
+                <table class="tabela-relatorio">
+                    <thead>
+                        <tr>
+                            <th>Credor</th>
+                            <th>Saldo Devedor</th>
+                            <th>% do Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCredores">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Fluxo de Caixa</h2>
+                <table class="tabela-relatorio">
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Entradas (Previsto)</th>
+                            <th>Saídas (Parcelas)</th>
+                            <th>Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFluxo">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Custo Médio da Dívida</h2>
+                <table class="tabela-relatorio">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Custo</th>
+                            <th>Peso na Carteira</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Pré-fixado</td><td>12,1% a.a.</td><td>35%</td></tr>
+                        <tr><td>TJLP</td><td>7,5% a.a.</td><td>10%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    async function carregarRelatorios() {
+        // Tenta usar localhost por padrão
+        const BASE_URL = "http://localhost:5000"; 
+
+        try {
+            // 1. CARREGAR DÍVIDA POR CREDOR
+            const resCredores = await fetch(`${BASE_URL}/relatorio_credores`);
+            const dadosCredores = await resCredores.json();
+            const tbodyCredores = document.getElementById("tabelaCredores");
+            tbodyCredores.innerHTML = "";
+
+            dadosCredores.forEach(item => {
+                const valor = Number(item.saldo_devedor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const perc = Number(item.porcentagem || 0).toFixed(1) + "%";
+                tbodyCredores.innerHTML += `<tr><td>${item.credor}</td><td>${valor}</td><td>${perc}</td></tr>`;
+            });
+
+            // 2. CARREGAR FLUXO DE CAIXA
+            const resFluxo = await fetch(`${BASE_URL}/relatorio_fluxo`);
+            const dadosFluxo = await resFluxo.json();
+            const tbodyFluxo = document.getElementById("tabelaFluxo");
+            tbodyFluxo.innerHTML = "";
+
+            if (!dadosFluxo || dadosFluxo.length === 0) {
+                tbodyFluxo.innerHTML = "<tr><td colspan='4' style='text-align:center'>Nenhuma parcela encontrada.</td></tr>";
+                return;
+            }
+
+            dadosFluxo.forEach(item => {
+                // CORREÇÃO: Usamos 'item.mes' porque é o que o server.js envia no objeto formatado
+                const vEntradas = Number(item.entradas || 0);
+                const vSaidas = Number(item.saidas || 0);
+                const vSaldo = Number(item.saldo || 0);
+
+                tbodyFluxo.innerHTML += `
+                    <tr>
+                        <td>${item.mes || '---'}</td>
+                        <td>${vEntradas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                        <td>${vSaidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                        <td style="color: ${vSaldo < 0 ? 'red' : 'green'}; font-weight: bold;">
+                            ${vSaldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        </td>
+                    </tr>`;
+            });
+
+        } catch (e) {
+            console.error("Erro ao carregar relatórios:", e);
+        }
+    }
+
+    window.onload = carregarRelatorios;
+    </script>
 </body>
 </html>

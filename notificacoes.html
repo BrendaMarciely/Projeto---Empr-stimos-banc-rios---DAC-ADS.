@@ -2,197 +2,113 @@
 <html lang="pt-BR">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Notificações - Impulso Financeiro</title>
-
-<link rel="stylesheet" href="dashboard.css">
-<link rel="stylesheet" href="notificacoes.css">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="notificacoes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-<div class="layout">
-
-<!-- SIDEBAR -->
-
-<aside class="sidebar">
-
-<div>
-
-<div class="logo">
-<i class="fa-solid fa-arrow-trend-up"></i>
-<span>Impulso Financeiro</span>
-</div>
-
-<nav>
-
-<a href="dashboard.html">
-<i class="fa-solid fa-table-columns"></i> Dashboard
-</a>
-
-<a href="emprestimos.html">
-<i class="fa-solid fa-building-columns"></i> Empréstimos
-</a>
-
-<a href="contratos.html">
-<i class="fa-solid fa-file-contract"></i> Contratos
-</a>
-
-<a href="cronograma.html">
-<i class="fa-solid fa-calendar"></i> Cronograma
-</a>
-
-<a href="desembolsos.html">
-<i class="fa-solid fa-money-bill"></i> Desembolsos
-</a>
-
-<a href="pagamentos.html">
-<i class="fa-solid fa-credit-card"></i> Pagamentos
-</a>
-
-<a href="renegociacoes.html">
-<i class="fa-solid fa-rotate"></i> Renegociações
-</a>
-
-<a href="notificacoes.html" class="active">
-<i class="fa-solid fa-bell"></i> Notificações
-</a>
-
-<a href="relatorios.html">
-<i class="fa-solid fa-chart-column"></i> Relatórios
-</a>
-
-</nav>
-
-</div>
-
-<div class="logout">
-<a href="index.html">
-<i class="fa-solid fa-right-from-bracket"></i> Sair
-</a>
-</div>
-
-</aside>
-
-
-<!-- CONTEÚDO -->
-
-<main class="content">
-
-<h1>Notificações e Alertas</h1>
-
-
-<!-- ALERTAS DE ATRASO -->
-
-<div class="card alert-card">
-
-<h2>
-<i class="fa-solid fa-triangle-exclamation"></i>
-Parcelas em Atraso
-</h2>
-
-<div class="alert-item">
-
-<div>
-
-<p><strong>Bradesco</strong> — parcela vencida há 5 dias</p>
-<span>Vencimento: 01/03/2026</span>
-
-</div>
-
-<span class="status atraso">
-Atrasada
-</span>
-
-</div>
-
-
-<div class="alert-item">
-
-<div>
-
-<p><strong>BNDES</strong> — parcela vencida há 12 dias</p>
-<span>Vencimento: 22/02/2026</span>
-
-</div>
-
-<span class="status atraso">
-Atrasada
-</span>
-
-</div>
-
-</div>
-
-
-<!-- PRÓXIMOS VENCIMENTOS -->
-
-<div class="card">
-
-<h2>
-<i class="fa-solid fa-clock"></i>
-Próximos Vencimentos
-</h2>
-
-<div class="alert-item">
-
-<div>
-
-<p><strong>Banco do Brasil</strong> — vence em 3 dias</p>
-<span>Vencimento: 08/03/2026</span>
-
-</div>
-
-<span class="status atencao">
-Atenção
-</span>
-
-</div>
-
-
-<div class="alert-item">
-
-<div>
-
-<p><strong>Itaú</strong> — vence em 7 dias</p>
-<span>Vencimento: 12/03/2026</span>
-
-</div>
-
-<span class="status normal">
-Normal
-</span>
-
-</div>
-
-
-<div class="alert-item">
-
-<div>
-
-<p><strong>Santander</strong> — vence em 15 dias</p>
-<span>Vencimento: 20/03/2026</span>
-
-</div>
-
-<span class="status normal">
-Normal
-</span>
-
-</div>
-
-</div>
-
-</main>
-
-</div>
-
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>Impulso Financeiro</span>
+            </div>
+            <nav>
+                <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+                <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
+                <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
+                <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
+                <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
+                <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
+                <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
+                <a href="notificacoes.html" class="active"><i class="fa-solid fa-bell"></i> Notificações</a>
+                <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+            </nav>
+            <div class="logout">
+                <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <h1>Notificações e Alertas</h1>
+
+            <div class="card alert-card">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Parcelas em Atraso</h2>
+                <div id="containerAtrasados">
+                    <p style="padding: 20px; color: #666;">Carregando alertas...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fa-solid fa-clock"></i> Próximos Vencimentos</h2>
+                <div id="containerProximos">
+                    <p style="padding: 20px; color: #666;">Verificando calendário...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        async function carregarNotificacoes() {
+            try {
+                const resposta = await fetch("http://127.0.0.1:5000/alertas_notificacoes");
+                const { atrasados, proximos } = await resposta.json();
+
+                const listaAtrasados = document.getElementById("containerAtrasados");
+                const listaProximos = document.getElementById("containerProximos");
+
+                // 1. Limpar e Renderizar Atrasados
+                listaAtrasados.innerHTML = "";
+                if (atrasados.length === 0) {
+                    listaAtrasados.innerHTML = '<div class="alert-item"><p>Nenhum atraso detectado. Tudo em dia! ✅</p></div>';
+                } else {
+                    atrasados.forEach(item => {
+                        const dias = Math.abs(item.dias_diferenca);
+                        listaAtrasados.innerHTML += `
+                            <div class="alert-item">
+                                <div>
+                                    <p><strong>${item.credor}</strong> — vencida há ${dias} dias</p>
+                                    <span>Vencimento: ${new Date(item.vencimento).toLocaleDateString('pt-BR')}</span>
+                                </div>
+                                <span class="status atraso">Atrasada</span>
+                            </div>`;
+                    });
+                }
+
+                // 2. Limpar e Renderizar Próximos
+                listaProximos.innerHTML = "";
+                if (proximos.length === 0) {
+                    listaProximos.innerHTML = '<div class="alert-item"><p>Nenhum vencimento para os próximos 15 dias.</p></div>';
+                } else {
+                    proximos.forEach(item => {
+                        let classeStatus = item.dias_diferenca <= 3 ? "atencao" : "normal";
+                        let textoStatus = item.dias_diferenca <= 3 ? "Urgente" : "Normal";
+                        let aviso = item.dias_diferenca === 0 ? "Vence HOJE!" : `vence em ${item.dias_diferenca} dias`;
+                        
+                        listaProximos.innerHTML += `
+                            <div class="alert-item">
+                                <div>
+                                    <p><strong>${item.credor}</strong> — ${aviso}</p>
+                                    <span>Vencimento: ${new Date(item.vencimento).toLocaleDateString('pt-BR')}</span>
+                                </div>
+                                <span class="status ${classeStatus}">${textoStatus}</span>
+                            </div>`;
+                    });
+                }
+
+            } catch (e) {
+                console.error("Erro ao carregar notificações:", e);
+                document.getElementById("containerAtrasados").innerHTML = "<p>Erro ao conectar com o servidor.</p>";
+            }
+        }
+
+        // Iniciar ao carregar a página
+        window.onload = carregarNotificacoes;
+    </script>
 </body>
 </html>

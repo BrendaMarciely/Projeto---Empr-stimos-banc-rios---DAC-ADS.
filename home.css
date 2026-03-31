@@ -1,0 +1,190 @@
+/* Inspirado no seu style.css original */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f4f7fa; 
+    color: #1b2b4b;
+    scroll-behavior: smooth;
+}
+
+/* NAVBAR - Fundo escuro para contrastar com o Hero */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background: #111827; /* Preto/Azul extremamente escuro */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 10;
+}
+
+.logo-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+}
+
+.logo-icon-small {
+    background: #2f66c3; 
+    color: white;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.link-entrar { color: rgba(255, 255, 255, 0.8); }
+.link-entrar:hover { color: white; }
+
+.btn-cadastrar {
+    background: #2f66c3;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.btn-cadastrar:hover { background: #1c4a96; }
+
+/* HERO SECTION - FUNDO ESCURO E IMPACTANTE */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 100px 10%;
+    height: 85vh;
+    
+    /* Gradiente ESCURO (rgba(27, 43, 75, 0.9)) + Imagem do Pexels */
+    background: linear-gradient(rgba(17, 24, 39, 0.92), rgba(27, 43, 75, 0.88)), 
+                url("https://images.pexels.com/photos/6770775/pexels-photo-6770775.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.hero-content { 
+    max-width: 750px; 
+    position: relative;
+    z-index: 2;
+}
+
+.tagline {
+    color: #4facfe; /* Azul claro ciano para brilhar no escuro */
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.hero-content h1 {
+    font-size: 52px;
+    color: white;
+    margin: 15px 0;
+    line-height: 1.1;
+}
+
+.highlight-text { color: #4facfe; } /* Destaque claro */
+
+.hero-content p {
+    font-size: 19px;
+    color: rgba(255, 255, 255, 0.8); /* Branco suave */
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.hero-actions { display: flex; gap: 20px; }
+
+.btn-hero-main {
+    text-decoration: none;
+    background: #2f66c3;
+    color: white;
+    padding: 16px 35px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(47, 102, 195, 0.3);
+}
+
+.btn-hero-main:hover {
+    background: #4facfe;
+    transform: translateY(-2px);
+}
+
+.btn-hero-sec {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 16px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.btn-hero-sec:hover { color: white; }
+
+/* Esconde o ícone gigante polonês */
+.hero-decoration { display: none; }
+
+/* INFO CARDS - Mantém o padrão claro para equilíbrio */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 80px 10%;
+    background-color: #f4f7fa;
+}
+
+.info-box {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: 0.3s;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.info-box:hover { 
+    transform: translateY(-5px); 
+    border-color: #2f66c3;
+}
+
+.info-box i {
+    font-size: 40px;
+    color: #2f66c3;
+    margin-bottom: 20px;
+}
+
+.info-box h3 { margin-bottom: 15px; color: #1b2b4b; }
+
+.info-box p { color: #6c7a92; font-size: 15px; }
+
+.home-footer {
+    padding: 40px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+    background-color: white;
+}

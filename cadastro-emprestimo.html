@@ -2,100 +2,92 @@
 <html lang="pt-BR">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Cadastrar Empréstimo</title>
-
-<!-- CSS da tela de empréstimos -->
-<link rel="stylesheet" href="emprestimos.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Empréstimo | Impulso Financeiro</title>
+    <link rel="stylesheet" href="emprestimos.css">
 </head>
 
 <body>
+    <div class="cadastro-container">
+        <div class="cadastro-card">
+            <h2>Cadastrar Empréstimo</h2>
+            <p>Preencha os dados para gerar o contrato e as parcelas.</p>
 
-<!-- ========================================= -->
-<!-- CONTAINER PRINCIPAL DA TELA               -->
-<!-- Centraliza o formulário na página         -->
-<!-- ========================================= -->
+            <form id="formEmprestimo">
+                <label>Credor</label>
+                <input type="text" id="credor" placeholder="Ex: Banco do Brasil" required>
 
-<div class="cadastro-container">
+                <label>Valor do Empréstimo (R$)</label>
+                <input type="number" id="valor" placeholder="Ex: 5000" step="0.01" required>
 
-<div class="cadastro-card">
+                <label>Taxa de Juros (% ao ano)</label>
+                <input type="number" step="0.01" id="taxa" placeholder="Ex: 12.5" required>
 
-<h2>Cadastrar Empréstimo</h2>
+                <label>Número de Parcelas</label>
+                <input type="number" id="parcelas" placeholder="Ex: 12" min="1" required>
 
-<p>Preencha os dados do empréstimo</p>
+                <label>Data de Início</label>
+                <input type="date" id="data" required>
 
-<form>
+                <label>Data de Término (Previsão)</label>
+                <input type="date" id="vencimento" required>
 
-<!-- CREDOR -->
+                <div class="botoes">
+                    <button type="button" onclick="salvarEmprestimo()">Salvar e Gerar Parcelas</button>
+                    <a href="emprestimos.html" class="cancelar">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<label>Credor</label>
-<input type="text" placeholder="Ex: Banco do Brasil">
+    <script>
+        async function salvarEmprestimo() {
+            // Pegando os valores dos campos
+            const credor = document.getElementById("credor").value;
+            const valor = document.getElementById("valor").value;
+            const taxa = document.getElementById("taxa").value;
+            const parcelas = document.getElementById("parcelas").value;
+            const data = document.getElementById("data").value;
+            const vencimento = document.getElementById("vencimento").value;
 
+            // Validação simples para não enviar campos vazios
+            if (!credor || !valor || !parcelas || !data) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
 
-<!-- VALOR -->
+            const dados = {
+                credor: credor,
+                valor: valor,
+                taxa: taxa,
+                parcelas: parcelas, // Novo campo enviado para o backend
+                data: data,
+                vencimento: vencimento,
+                usuario_id: localStorage.getItem("usuarioId") || 1 
+            };
 
-<label>Valor do Empréstimo</label>
-<input type="number" placeholder="Ex: 500000">
+            try {
+                const resposta = await fetch("http://127.0.0.1:5000/cadastrar_emprestimo", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados)
+                });
 
-
-<!-- TAXA -->
-
-<label>Taxa de Juros (% ao ano)</label>
-<input type="number" step="0.01" placeholder="Ex: 12.5">
-
-
-<!-- DATA INÍCIO -->
-
-<label>Data de Início</label>
-<input type="date">
-
-
-<!-- DATA TÉRMINO -->
-
-<label>Data de Término</label>
-<input type="date">
-
-
-<!-- STATUS -->
-
-<label>Status</label>
-
-<select>
-
-<option>Ativo</option>
-<option>Encerrado</option>
-
-</select>
-
-
-<!-- BOTÕES -->
-
-<div class="botoes">
-
-<button type="button"
-onclick="window.location.href='emprestimos.html'">
-
-Salvar
-
-</button>
-
-<a href="emprestimos.html" class="cancelar">
-
-Cancelar
-
-</a>
-
-</div>
-
-</form>
-
-</div>
-
-</div>
+                const resultado = await resposta.json();
+                
+                if (resultado.msg.includes("sucesso")) {
+                    alert("Sucesso! O empréstimo e o cronograma de parcelas foram gerados. ✅");
+                    window.location.href = "emprestimos.html";
+                } else {
+                    alert("Erro ao cadastrar: " + resultado.msg);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro de conexão com o servidor.");
+            }
+        }
+    </script>
 
 </body>
 </html>

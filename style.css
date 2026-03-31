@@ -94,6 +94,9 @@ padding:12px;
 border:1px solid #d0d6df;
 border-radius:6px;
 font-size:14px;
+
+
+
 }
 
 /* BOTÃO */
@@ -132,4 +135,33 @@ margin-left:5px;
 
 .register a:hover{
 text-decoration:underline;
+}
+
+/* SELECT PERFIL DE ACESSO */
+
+select {
+width: 100%;
+padding: 12px;
+margin-top: 6px;
+margin-bottom: 16px;
+border-radius: 8px;
+border: 1px solid #dcdcdc;
+font-size: 14px;
+background-color: #fff;
+outline: none;
+transition: 0.2s;
+cursor: pointer;
+}
+
+/* Efeito ao clicar */
+
+select:focus {
+border-color: #3b6fd8;
+box-shadow: 0 0 0 2px rgba(59,111,216,0.15);
+}
+
+/* Hover suave */
+
+select:hover {
+border-color: #3b6fd8;
 }
