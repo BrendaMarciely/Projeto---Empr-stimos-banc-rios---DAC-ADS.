@@ -3,6 +3,8 @@ const mysql = require("mysql2")
 const cors = require("cors")
 
 const app = express()
+
+// Configuração do CORS para permitir que o Vercel acesse o Railway
 app.use(cors())
 app.use(express.json())
 
@@ -162,7 +164,7 @@ app.get("/relatorio_credores", (req, res) => {
     });
 });
 
-// ================= RELATÓRIO FLUXO DE CAIXA (VERSÃO BLINDADA) =================
+// ================= RELATÓRIO FLUXO DE CAIXA =================
 app.get("/relatorio_fluxo", (req, res) => {
     const sql = `
         SELECT 
@@ -194,4 +196,8 @@ app.get("/relatorio_fluxo", (req, res) => {
     });
 });
 
-app.listen(5000, () => console.log("🚀 Servidor rodando na porta 5000"))
+// Ajuste para o Railway escolher a porta automaticamente
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+});
