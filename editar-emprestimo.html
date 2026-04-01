@@ -45,7 +45,7 @@
 
         // 2. Assim que a tela abre, busca os dados no banco para preencher os campos
         async function carregarDados() {
-            const resposta = await fetch(`http://127.0.0.1:5000/emprestimo/${emprestimoId}`);
+           const resposta = await fetch(`https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/emprestimo/${emprestimoId}`);
             const emp = await resposta.json();
 
             document.getElementById("credor").value = emp.credor;
@@ -67,7 +67,7 @@
                 status: document.getElementById("status").value
             };
 
-            const resposta = await fetch(`http://127.0.0.1:5000/editar_emprestimo/${emprestimoId}`, {
+            const resposta = await fetch(`https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/editar_emprestimo/${emprestimoId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)

@@ -194,7 +194,7 @@ const credor = document.getElementById("contratoSelect").value
 const valor = document.getElementById("valorPago").value
 const data = document.getElementById("dataPagamento").value
 
-const resposta = await fetch("http://127.0.0.1:5000/registrar_pagamento",{
+const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/registrar_pagamento",{
 method:"POST",
 headers:{ "Content-Type":"application/json" },
 body: JSON.stringify({ credor, valor, data })
@@ -212,7 +212,7 @@ async function carregarPagamentos(){
 
 const tabela = document.getElementById("tabelaPagamentos")
 
-const resposta = await fetch("http://127.0.0.1:5000/listar_pagamentos")
+const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/listar_pagamentos")
 const dados = await resposta.json()
 
 tabela.innerHTML = ""

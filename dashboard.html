@@ -99,7 +99,7 @@
         // ⭐ CARREGAR DADOS REAIS DO BANCO
         async function carregarDashboard() {
             try {
-                const resposta = await fetch("http://127.0.0.1:5000/dashboard_resumo");
+                const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/dashboard_resumo");
                 const dados = await resposta.json();
 
                 // Atualiza os Cards com os dados do Backend
@@ -120,7 +120,7 @@
         // ⭐ LOGOUT REAL
         function logout() {
             localStorage.removeItem("usuarioLogado")
-            window.location.href = "index.html"
+            window.location.href = "login.html"
         }
 
         // Iniciar carregamento

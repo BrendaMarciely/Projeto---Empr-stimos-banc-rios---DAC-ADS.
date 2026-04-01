@@ -78,7 +78,7 @@
         // --- FUNÇÃO PARA CARREGAR DADOS DO BACKEND ---
         async function carregarEmprestimos() {
             try {
-                const resposta = await fetch("http://127.0.0.1:5000/listar_emprestimos");
+                const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/listar_emprestimos");
                 const dados = await resposta.json();
                 const tabela = document.getElementById("tabelaEmprestimos");
                 tabela.innerHTML = "";
@@ -124,7 +124,7 @@
         async function excluirEmprestimo(id) {
             if (confirm("Tem certeza que deseja excluir este empréstimo?")) {
                 try {
-                    const resposta = await fetch(`http://127.0.0.1:5000/excluir_emprestimo/${id}`, {
+                    const resposta = await fetch(`https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/excluir_emprestimo/${id}`, {
                         method: 'DELETE'
                     });
                     const resultado = await resposta.json();

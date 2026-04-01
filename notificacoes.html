@@ -30,7 +30,7 @@
                 <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
             </nav>
             <div class="logout">
-                <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+                <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
             </div>
         </aside>
 
@@ -56,7 +56,7 @@
     <script>
         async function carregarNotificacoes() {
             try {
-                const resposta = await fetch("http://127.0.0.1:5000/alertas_notificacoes");
+                const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/alertas_notificacoes");
                 const { atrasados, proximos } = await resposta.json();
 
                 const listaAtrasados = document.getElementById("containerAtrasados");

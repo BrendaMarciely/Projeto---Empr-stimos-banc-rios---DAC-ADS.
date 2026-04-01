@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Impulso Financeiro - Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="login-card">
+
+<!-- Logo / título -->
+
+<div class="logo-area">
+
+<div class="logo-icon">↗</div>
+
+<div>
+<h1>Impulso Financeiro</h1>
+<p>Controle de Empréstimos Bancários</p>
+</div>
+
+</div>
+
+
+<!-- Formulário de login -->
+
+<form id="loginForm">
+
+<label for="email">E-mail</label>
+
+<input 
+type="email"
+id="email"
+name="email"
+placeholder="seu@email.com"
+required
+>
+
+<label for="senha">Senha</label>
+<input 
+type="password"
+id="senha"
+name="senha"
+placeholder="••••••••"
+required
+>
+
+<button type="submit">
+Entrar
+</button>
+
+</form>
+
+
+<!-- Link cadastro -->
+
+<div class="register">
+
+Não tem uma conta?
+<a href="cadastro.html">Criar cadastro</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const form = document.getElementById("loginForm")
+
+form.addEventListener("submit", async function(event){
+
+event.preventDefault()
+
+const login = document.getElementById("email").value
+const senha = document.getElementById("senha").value
+
+if(login === "" || senha === ""){
+    alert("Por favor, preencha todos os campos.")
+    return
+}
+
+try{
+
+const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/login",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+login,
+senha
+})
+})
+
+const dados = await resposta.json()
+
+if(dados.msg === "ok"){
+
+// ⭐ salva usuário logado no navegador
+localStorage.setItem(
+"usuarioLogado",
+JSON.stringify(dados.usuario)
+)
+
+// redireciona
+window.location.href = "dashboard.html"
+
+}else{
+
+alert("Usuário ou senha inválidos")
+
+}
+
+}catch(e){
+
+alert("Erro ao conectar com o servidor")
+console.log(e)
+
+}
+
+})
+
+</script>
+
+</body>
+</html>
