@@ -1,0 +1,198 @@
+/* ============================================================
+   LAYOUT E ESTRUTURA DE ABAS
+   ============================================================ */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    background: #f3f4f6;
+    padding: 6px;
+    border-radius: 12px;
+    width: fit-content;
+}
+
+.tabs button {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.tabs button:hover {
+    color: #111827;
+}
+
+.tabs .active-tab {
+    background: white;
+    color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================
+   CARDS E CONTEÚDO
+   ============================================================ */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+}
+
+.card h2 {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================================================
+   LISTA DE USUÁRIOS (CRUD)
+   ============================================================ */
+.lista-usuarios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.usuario-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 15px 20px;
+    transition: all 0.2s ease;
+}
+
+.usuario-item:hover {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+.usuario-item .info strong {
+    display: block;
+    font-size: 16px;
+    color: #0f172a;
+}
+
+.usuario-item .info small {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* ============================================================
+   CONTROLES E STATUS
+   ============================================================ */
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.status {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+}
+
+.status.ativo {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status.inativo {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ============================================================
+   BOTÕES DE AÇÃO (CRUD)
+   ============================================================ */
+.acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.acoes button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+/* Editar (Amarelo/Laranja) */
+.btn-edit {
+    background: #fef3c7;
+    color: #d97706;
+}
+.btn-edit:hover {
+    background: #d97706;
+    color: white;
+}
+
+/* Ativar/Desativar (Azul) */
+.btn-toggle {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.btn-toggle:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* Excluir (Vermelho) */
+.btn-delete {
+    background: #fff1f2;
+    color: #e11d48;
+}
+.btn-delete:hover {
+    background: #e11d48;
+    color: white;
+}
+
+/* ============================================================
+   ABA DE PERFIS (GRID)
+   ============================================================ */
+.lista-perfis-estilizda {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.lista-perfis-estilizda li {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.lista-perfis-estilizda li i {
+    color: #2563eb;
+    font-size: 18px;
+}

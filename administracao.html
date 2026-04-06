@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="administracao.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span>Impulso Financeiro</span>
+            </div>
+            <nav>
+                <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
+                <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
+                <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
+                <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
+                <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
+                <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
+                <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
+                <a href="notificacoes.html"><i class="fa-solid fa-bell"></i> Notificações</a>
+                <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+                <a href="administracao.html" class="active"><i class="fa-solid fa-user-gear"></i> Administração</a>
+            </nav>
+            <div class="logout">
+                <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </aside>
+
+        <main class="content">
+            <h1>Painel de Controle</h1>
+
+            <div class="tabs">
+                <button id="btn-usuarios" class="active-tab" onclick="trocarAba('usuarios')">Usuários</button>
+                <button id="btn-perfis" onclick="trocarAba('perfis')">Perfis de Acesso</button>
+            </div>
+
+            <div id="usuarios" class="card">
+                <h2><i class="fa-solid fa-users"></i> Gerenciar Usuários</h2>
+                <div id="listaUsuarios" class="lista-usuarios">
+                    <p>Carregando usuários do sistema...</p>
+                </div>
+            </div>
+
+            <div id="perfis" class="card" style="display:none;">
+                <h2><i class="fa-solid fa-id-card-clip"></i> Definição de Perfis</h2>
+                <ul class="lista-perfis-estilizda">
+                    <li><i class="fa-solid fa-circle-check"></i> Tesouraria / Financeiro</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Gestor Financeiro</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Contabilidade</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Compliance / Auditoria</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Administrador do Sistema</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Financeira Externa</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO DA URL DO RAILWAY
+        const BASE_URL = "https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app";
+
+        // 1. LISTAR USUÁRIOS (READ)
+        async function renderUsuarios() {
+            try {
+                const resposta = await fetch(`${BASE_URL}/listar_usuarios`);
+                const usuarios = await resposta.json();
+                
+                const lista = document.getElementById("listaUsuarios");
+                lista.innerHTML = "";
+
+                if (usuarios.length === 0) {
+                    lista.innerHTML = "<p>Nenhum usuário encontrado no banco.</p>";
+                    return;
+                }
+
+                usuarios.forEach(u => {
+                    const statusLabel = u.status || 'Ativo';
+                    lista.innerHTML += `
+                    <div class="usuario-item">
+                        <div class="info">
+                            <strong>${u.nome}</strong>
+                            <small>${u.login} | <b>${u.perfil}</b></small>
+                        </div>
+                        <div class="user-controls">
+                            <span class="status ${statusLabel.toLowerCase()}">${statusLabel}</span>
+                            <div class="acoes">
+                                <button class="btn-edit" onclick="editarUsuario(${u.usuario_id}, '${u.nome}', '${u.perfil}')" title="Editar">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button class="btn-toggle" onclick="toggleStatus(${u.usuario_id}, '${statusLabel}')" title="Ativar/Desativar">
+                                    <i class="fa-solid fa-power-off"></i>
+                                </button>
+                                <button class="btn-delete" onclick="excluirUsuario(${u.usuario_id})" title="Excluir">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            } catch (error) {
+                console.error("Erro ao carregar usuários:", error);
+                document.getElementById("listaUsuarios").innerHTML = "<p style='color:red'>Erro ao conectar com o banco de dados.</p>";
+            }
+        }
+
+        // 2. EDITAR USUÁRIO (UPDATE)
+        async function editarUsuario(id, nomeAtual, perfilAtual) {
+            const novoNome = prompt("Novo nome:", nomeAtual);
+            const novoPerfil = prompt("Novo Perfil (ex: Administrador do Sistema):", perfilAtual);
+
+            if (novoNome && novoPerfil) {
+                try {
+                    await fetch(`${BASE_URL}/editar_usuario/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nome: novoNome, perfil: novoPerfil })
+                    });
+                    renderUsuarios();
+                } catch (e) { alert("Erro ao editar."); }
+            }
+        }
+
+        // 3. ALTERAR STATUS (UPDATE STATUS)
+        async function toggleStatus(id, statusAtual) {
+            const novoStatus = statusAtual === 'Ativo' ? 'Inativo' : 'Ativo';
+            try {
+                await fetch(`${BASE_URL}/alterar_status_usuario/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ novoStatus })
+                });
+                renderUsuarios();
+            } catch (e) { alert("Erro ao mudar status."); }
+        }
+
+        // 4. EXCLUIR USUÁRIO (DELETE)
+        async function excluirUsuario(id) {
+            if (confirm("Deseja realmente excluir este acesso permanentemente?")) {
+                try {
+                    await fetch(`${BASE_URL}/excluir_usuario/${id}`, { method: 'DELETE' });
+                    renderUsuarios();
+                } catch (e) { alert("Erro ao excluir."); }
+            }
+        }
+
+        // 5. TROCAR ABAS
+        function trocarAba(aba) {
+            document.getElementById("usuarios").style.display = aba === 'usuarios' ? "block" : "none";
+            document.getElementById("perfis").style.display = aba === 'perfis' ? "block" : "none";
+            
+            document.getElementById("btn-usuarios").classList.toggle("active-tab", aba === 'usuarios');
+            document.getElementById("btn-perfis").classList.toggle("active-tab", aba === 'perfis');
+        }
+
+        // INICIALIZAÇÃO
+        window.onload = renderUsuarios;
+    </script>
+</body>
+</html>
