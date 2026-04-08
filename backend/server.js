@@ -199,46 +199,6 @@ app.get("/relatorio_fluxo", (req, res) => {
 
 
 
-// ================= CRUD DE USUÁRIOS (TELA ADM) =================
-
-// 1. LISTAR TODOS OS USUÁRIOS
-app.get("/listar_usuarios", (req, res) => {
-    const sql = "SELECT usuario_id, nome, login, perfil, status FROM tbUsuarios";
-    conexao.query(sql, (erro, resultados) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao buscar usuários" });
-        res.json(resultados);
-    });
-});
-
-// 2. ALTERAR STATUS (Ativar/Desativar)
-app.put("/alterar_status_usuario/:id", (req, res) => {
-    const { novoStatus } = req.body;
-    const sql = "UPDATE tbUsuarios SET status = ? WHERE usuario_id = ?";
-    conexao.query(sql, [novoStatus, req.params.id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao atualizar status" });
-        res.json({ msg: "Status atualizado com sucesso!" });
-    });
-});
-
-// 3. EDITAR USUÁRIO (Nome e Perfil)
-app.put("/editar_usuario/:id", (req, res) => {
-    const { nome, perfil } = req.body;
-    const sql = "UPDATE tbUsuarios SET nome = ?, perfil = ? WHERE usuario_id = ?";
-    conexao.query(sql, [nome, perfil, req.params.id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao editar usuário" });
-        res.json({ msg: "Usuário editado com sucesso!" });
-    });
-});
-
-// 4. EXCLUIR USUÁRIO
-app.delete("/excluir_usuario/:id", (req, res) => {
-    const sql = "DELETE FROM tbUsuarios WHERE usuario_id = ?";
-    conexao.query(sql, [req.params.id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao excluir usuário" });
-        res.json({ msg: "Usuário removido com sucesso!" });
-    });
-});
-
 
 
 
