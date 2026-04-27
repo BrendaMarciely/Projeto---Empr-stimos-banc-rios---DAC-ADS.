@@ -15,14 +15,13 @@
 
             <div class="logo-area">
                 <div class="logo-icon">↗</div>
-
                 <div>
                     <h1>Impulso Financeiro</h1>
                     <p>Crie sua conta</p>
                 </div>
             </div>
 
-            <form>
+            <form id="formCadastro">
 
                 <label>Nome completo</label>
                 <input type="text" id="nome" placeholder="Seu nome completo" required>
@@ -32,6 +31,9 @@
 
                 <label>Senha</label>
                 <input type="password" id="senha" placeholder="••••••••" required>
+                <small style="color: #666; display: block; margin-bottom: 10px; font-size: 11px;">
+                    Mínimo 8 caracteres, uma letra maiúscula, um número e um símbolo.
+                </small>
 
                 <label>Confirmar Senha</label>
                 <input type="password" id="confirmarSenha" placeholder="••••••••" required>
@@ -60,23 +62,32 @@
 
     <script>
         async function cadastrar() {
+            // Captura os valores
+            const nome = document.getElementById("nome").value.trim();
+            const login = document.getElementById("login").value.trim();
+            const senha = document.getElementById("senha").value;
+            const confirmar = document.getElementById("confirmarSenha").value;
+            const perfil = document.getElementById("perfil").value;
 
-            const nome = document.getElementById("nome").value
-            const login = document.getElementById("login").value
-            const senha = document.getElementById("senha").value
-            const confirmar = document.getElementById("confirmarSenha").value
-            
-            // CAPTURANDO O VALOR DO PERFIL
-            const perfil = document.getElementById("perfil").value
-
-            if (senha !== confirmar) {
-                alert("As senhas não coincidem")
-                return
+            // --- REGRA 1: CAMPOS OBRIGATÓRIOS ---
+            if (!nome || !login || !senha || !confirmar) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
             }
 
-            if (!nome || !login || !senha || !perfil) {
-                alert("Por favor, preencha todos os campos")
-                return
+            // --- REGRA 2: VALIDAÇÃO DE SENHA FORTE (REGEX) ---
+            // Mínimo 8 caracteres, 1 maiúscula, 1 número, 1 caractere especial
+            const regexSenhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            
+            if (!regexSenhaForte.test(senha)) {
+                alert("Senha muito fraca!\n\nA senha deve conter pelo menos:\n- 8 caracteres\n- 1 letra maiúscula\n- 1 número\n- 1 caractere especial (@$!%*?&)");
+                return;
+            }
+
+            // --- REGRA 3: CONCORDÂNCIA DE SENHAS ---
+            if (senha !== confirmar) {
+                alert("As senhas não coincidem.");
+                return;
             }
 
             try {
@@ -89,20 +100,23 @@
                         nome,
                         login,
                         senha,
-                        perfil // ENVIANDO O PERFIL PARA O BACKEND
+                        perfil
                     })
-                })
+                });
 
-                const dados = await resposta.json()
-                alert(dados.msg)
+                const dados = await resposta.json();
 
-                if (dados.msg.includes("sucesso")) {
-                    window.location.href = "login.html"
+                // --- REGRA 4: VERIFICAÇÃO DE SUCESSO NO REDIRECIONAMENTO ---
+                if (resposta.ok && dados.msg.toLowerCase().includes("sucesso")) {
+                    alert("✅ " + dados.msg);
+                    window.location.href = "login.html";
+                } else {
+                    alert("❌ Erro: " + (dados.msg || "Falha ao realizar cadastro."));
                 }
 
             } catch (e) {
-                alert("Erro ao conectar com o servidor")
-                console.log(e)
+                alert("Erro ao conectar com o servidor. Verifique sua conexão.");
+                console.log(e);
             }
         }
     </script>
