@@ -6,6 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Conta - Impulso Financeiro</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            color: #666;
+            z-index: 10;
+        }
+
+        .instrucao-input {
+            color: #666;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+    </style>
 </head>
 
 <body>
@@ -27,16 +54,23 @@
                 <input type="text" id="nome" placeholder="Seu nome completo" required>
 
                 <label>E-mail</label>
-                <input type="email" id="login" placeholder="seu@email.com" required>
+                <input type="email" id="login" placeholder="exemplo@email.com" required>
+                <small class="instrucao-input">Não use acentos (Ex: use joao em vez de joão).</small>
 
                 <label>Senha</label>
-                <input type="password" id="senha" placeholder="••••••••" required>
-                <small style="color: #666; display: block; margin-bottom: 10px; font-size: 11px;">
+                <div class="password-wrapper">
+                    <input type="password" id="senha" placeholder="••••••••" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggleVisibility('senha', this)"></i>
+                </div>
+                <small class="instrucao-input">
                     Mínimo 8 caracteres, uma letra maiúscula, um número e um símbolo.
                 </small>
 
                 <label>Confirmar Senha</label>
-                <input type="password" id="confirmarSenha" placeholder="••••••••" required>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmarSenha" placeholder="••••••••" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggleVisibility('confirmarSenha', this)"></i>
+                </div>
 
                 <label>Perfil de Acesso</label>
                 <select id="perfil">
@@ -61,8 +95,19 @@
     </div>
 
     <script>
+        // Função para alternar visibilidade da senha
+        function toggleVisibility(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                el.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                el.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
         async function cadastrar() {
-            // Captura os valores
             const nome = document.getElementById("nome").value.trim();
             const login = document.getElementById("login").value.trim();
             const senha = document.getElementById("senha").value;
@@ -75,16 +120,22 @@
                 return;
             }
 
-            // --- REGRA 2: VALIDAÇÃO DE SENHA FORTE (REGEX) ---
-            // Mínimo 8 caracteres, 1 maiúscula, 1 número, 1 caractere especial
+            // --- REGRA 2: VALIDAÇÃO DE E-MAIL (SEM ACENTOS) ---
+            // Esta regex aceita o formato padrão e barra caracteres acentuados
+            const regexEmailPadrao = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!regexEmailPadrao.test(login)) {
+                alert("❌ E-mail inválido!\nUse apenas letras sem acento, números e pontos (Ex: joao@email.com).");
+                return;
+            }
+
+            // --- REGRA 3: VALIDAÇÃO DE SENHA FORTE (REGEX) ---
             const regexSenhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            
             if (!regexSenhaForte.test(senha)) {
                 alert("Senha muito fraca!\n\nA senha deve conter pelo menos:\n- 8 caracteres\n- 1 letra maiúscula\n- 1 número\n- 1 caractere especial (@$!%*?&)");
                 return;
             }
 
-            // --- REGRA 3: CONCORDÂNCIA DE SENHAS ---
+            // --- REGRA 4: CONCORDÂNCIA DE SENHAS ---
             if (senha !== confirmar) {
                 alert("As senhas não coincidem.");
                 return;
@@ -106,7 +157,6 @@
 
                 const dados = await resposta.json();
 
-                // --- REGRA 4: VERIFICAÇÃO DE SUCESSO NO REDIRECIONAMENTO ---
                 if (resposta.ok && dados.msg.toLowerCase().includes("sucesso")) {
                     alert("✅ " + dados.msg);
                     window.location.href = "login.html";
@@ -122,4 +172,5 @@
     </script>
 
 </body>
+
 </html>
