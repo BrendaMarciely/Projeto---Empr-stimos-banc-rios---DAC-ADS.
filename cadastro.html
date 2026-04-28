@@ -52,6 +52,7 @@
 
                 <label>Nome completo</label>
                 <input type="text" id="nome" placeholder="Seu nome completo" required>
+                <small class="instrucao-input">Digite nome e sobrenome (apenas letras).</small>
 
                 <label>E-mail</label>
                 <input type="email" id="login" placeholder="exemplo@email.com" required>
@@ -95,7 +96,7 @@
     </div>
 
     <script>
-        // Função para alternar visibilidade da senha
+        // Função para mostrar/esconder senha
         function toggleVisibility(id, el) {
             const input = document.getElementById(id);
             if (input.type === "password") {
@@ -108,51 +109,56 @@
         }
 
         async function cadastrar() {
-            const nome = document.getElementById("nome").value.trim();
+            const nomeInput = document.getElementById("nome").value.trim();
             const login = document.getElementById("login").value.trim();
             const senha = document.getElementById("senha").value;
             const confirmar = document.getElementById("confirmarSenha").value;
             const perfil = document.getElementById("perfil").value;
 
-            // --- REGRA 1: CAMPOS OBRIGATÓRIOS ---
-            if (!nome || !login || !senha || !confirmar) {
+            // --- 1. VALIDAÇÃO DE CAMPOS VAZIOS ---
+            if (!nomeInput || !login || !senha || !confirmar) {
                 alert("Por favor, preencha todos os campos obrigatórios.");
                 return;
             }
 
-            // --- REGRA 2: VALIDAÇÃO DE E-MAIL (SEM ACENTOS) ---
-            // Esta regex aceita o formato padrão e barra caracteres acentuados
-            const regexEmailPadrao = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-            if (!regexEmailPadrao.test(login)) {
-                alert("❌ E-mail inválido!\nUse apenas letras sem acento, números e pontos (Ex: joao@email.com).");
+            // --- 2. VALIDAÇÃO DE NOME (APENAS LETRAS E COMPLETO) ---
+            const regexApenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+            if (!regexApenasLetras.test(nomeInput)) {
+                alert("❌ O nome deve conter apenas letras e espaços.");
                 return;
             }
 
-            // --- REGRA 3: VALIDAÇÃO DE SENHA FORTE (REGEX) ---
-            const regexSenhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!regexSenhaForte.test(senha)) {
-                alert("Senha muito fraca!\n\nA senha deve conter pelo menos:\n- 8 caracteres\n- 1 letra maiúscula\n- 1 número\n- 1 caractere especial (@$!%*?&)");
+            const partesNome = nomeInput.split(" ").filter(p => p.length > 0);
+            if (partesNome.length < 2) {
+                alert("❌ Por favor, digite o nome completo (pelo menos um sobrenome).");
                 return;
             }
 
-            // --- REGRA 4: CONCORDÂNCIA DE SENHAS ---
+            // --- 3. VALIDAÇÃO DE E-MAIL (SEM ACENTOS) ---
+            const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!regexEmail.test(login)) {
+                alert("❌ E-mail inválido! Não utilize acentos ou caracteres especiais.");
+                return;
+            }
+
+            // --- 4. VALIDAÇÃO DE SENHA FORTE ---
+            const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!regexSenha.test(senha)) {
+                alert("❌ Senha fraca!\n\nA senha precisa de:\n- Mínimo 8 caracteres\n- Uma letra maiúscula\n- Um número\n- Um caractere especial (@$!%*?&)");
+                return;
+            }
+
+            // --- 5. CONCORDÂNCIA DE SENHA ---
             if (senha !== confirmar) {
-                alert("As senhas não coincidem.");
+                alert("❌ As senhas não coincidem.");
                 return;
             }
 
             try {
                 const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/cadastrar", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        nome,
-                        login,
-                        senha,
-                        perfil
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nome: nomeInput, login, senha, perfil })
                 });
 
                 const dados = await resposta.json();
@@ -161,16 +167,15 @@
                     alert("✅ " + dados.msg);
                     window.location.href = "login.html";
                 } else {
-                    alert("❌ Erro: " + (dados.msg || "Falha ao realizar cadastro."));
+                    alert("❌ " + dados.msg);
                 }
 
             } catch (e) {
-                alert("Erro ao conectar com o servidor. Verifique sua conexão.");
+                alert("Erro ao conectar com o servidor.");
                 console.log(e);
             }
         }
     </script>
 
 </body>
-
 </html>

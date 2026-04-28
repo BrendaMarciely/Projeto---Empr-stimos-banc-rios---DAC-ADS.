@@ -1,138 +1,130 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impulso Financeiro - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        .password-wrapper input {
+            width: 100%;
+        }
 
-<title>Impulso Financeiro - Login</title>
-
-<link rel="stylesheet" href="style.css">
-
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            color: #666;
+            z-index: 10;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
+        <div class="login-card">
 
-<div class="login-card">
+            <div class="logo-area">
+                <div class="logo-icon">↗</div>
+                <div>
+                    <h1>Impulso Financeiro</h1>
+                    <p>Controle de Empréstimos Bancários</p>
+                </div>
+            </div>
 
-<!-- Logo / título -->
+            <form id="loginForm">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required>
 
-<div class="logo-area">
+                <label for="senha">Senha</label>
+                <div class="password-wrapper">
+                    <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                    <i class="fa-solid fa-eye toggle-password" onclick="toggleVisibility()"></i>
+                </div>
 
-<div class="logo-icon">↗</div>
+                <button type="submit">Entrar</button>
+            </form>
 
-<div>
-<h1>Impulso Financeiro</h1>
-<p>Controle de Empréstimos Bancários</p>
-</div>
+            <div class="register">
+                Não tem uma conta?
+                <a href="cadastro.html">Criar cadastro</a>
+            </div>
 
-</div>
+        </div>
+    </div>
 
+    <script>
+        // Função para alternar visibilidade da senha
+        function toggleVisibility() {
+            const senhaInput = document.getElementById("senha");
+            const icone = document.querySelector(".toggle-password");
+            
+            if (senhaInput.type === "password") {
+                senhaInput.type = "text";
+                icone.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                senhaInput.type = "password";
+                icone.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
 
-<!-- Formulário de login -->
+        const form = document.getElementById("loginForm")
 
-<form id="loginForm">
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault()
 
-<label for="email">E-mail</label>
+            const login = document.getElementById("email").value
+            const senha = document.getElementById("senha").value
 
-<input 
-type="email"
-id="email"
-name="email"
-placeholder="seu@email.com"
-required
->
+            if (login === "" || senha === "") {
+                alert("Por favor, preencha todos os campos.")
+                return
+            }
 
-<label for="senha">Senha</label>
-<input 
-type="password"
-id="senha"
-name="senha"
-placeholder="••••••••"
-required
->
+            try {
+                const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        login,
+                        senha
+                    })
+                })
 
-<button type="submit">
-Entrar
-</button>
+                const dados = await resposta.json()
 
-</form>
+                if (dados.msg === "ok") {
+                    // ⭐ salva usuário logado no navegador
+                    localStorage.setItem(
+                        "usuarioLogado",
+                        JSON.stringify(dados.usuario)
+                    )
 
+                    // redireciona
+                    window.location.href = "dashboard.html"
 
-<!-- Link cadastro -->
+                } else {
+                    alert("Usuário ou senha inválidos")
+                }
 
-<div class="register">
-
-Não tem uma conta?
-<a href="cadastro.html">Criar cadastro</a>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-const form = document.getElementById("loginForm")
-
-form.addEventListener("submit", async function(event){
-
-event.preventDefault()
-
-const login = document.getElementById("email").value
-const senha = document.getElementById("senha").value
-
-if(login === "" || senha === ""){
-    alert("Por favor, preencha todos os campos.")
-    return
-}
-
-try{
-
-const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/login",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify({
-login,
-senha
-})
-})
-
-const dados = await resposta.json()
-
-if(dados.msg === "ok"){
-
-// ⭐ salva usuário logado no navegador
-localStorage.setItem(
-"usuarioLogado",
-JSON.stringify(dados.usuario)
-)
-
-// redireciona
-window.location.href = "dashboard.html"
-
-}else{
-
-alert("Usuário ou senha inválidos")
-
-}
-
-}catch(e){
-
-alert("Erro ao conectar com o servidor")
-console.log(e)
-
-}
-
-})
-
-</script>
+            } catch (e) {
+                alert("Erro ao conectar com o servidor")
+                console.log(e)
+            }
+        })
+    </script>
 
 </body>
+
 </html>
