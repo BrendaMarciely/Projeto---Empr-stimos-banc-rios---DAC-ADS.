@@ -1,0 +1,325 @@
+/* --- 1. VARIÁVEIS E CONFIGURAÇÕES GERAIS --- */
+:root {
+    --bg-fundo: #f8fafc;
+    --branco: #ffffff;
+    --texto-titulo: #1e293b;
+    --texto-corpo: #64748b;
+    --azul-primario: #2563eb;
+    --azul-claro: #eff6ff;
+    --borda: #f1f5f9;
+    --vermelho: #ef4444;
+}
+
+.content {
+    background-color: var(--bg-fundo);
+    padding: 40px !important;
+    min-height: 100vh;
+}
+
+/* --- 2. CABEÇALHO DA PÁGINA --- */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: var(--branco);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.icon-circle i {
+    color: var(--azul-primario);
+    font-size: 24px;
+}
+
+.header-text h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--texto-titulo);
+    margin: 0;
+}
+
+.header-text p {
+    font-size: 14px;
+    color: var(--texto-corpo);
+    margin: 4px 0 0 0;
+}
+
+/* --- 3. CARD PRINCIPAL E TOOLBAR --- */
+.crud-card {
+    background: var(--branco);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--borda);
+    margin-bottom: 10px;
+}
+
+/* Padronização de Botões */
+.btn-blue, .btn-add, .btn-save {
+    background-color: var(--azul-primario);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-gray, .btn-print, .btn-cancel {
+    background-color: var(--branco);
+    color: var(--texto-titulo);
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* --- 4. TABELA DE USUÁRIOS --- */
+.table-responsive { width: 100%; overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; text-align: left; }
+
+th {
+    padding: 15px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--borda);
+}
+
+td {
+    padding: 18px 15px;
+    border-bottom: 1px solid var(--borda);
+    color: #334155;
+    font-size: 14px;
+}
+
+/* Elementos da Linha */
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #ede9fe;
+    color: #7c3aed;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 12px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: var(--azul-claro);
+    color: #3b82f6;
+}
+
+/* Ações (Editar/Excluir) */
+.action-btn-edit, .action-btn-delete {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: var(--branco);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.action-btn-edit { color: #3b82f6; margin-right: 8px; }
+.action-btn-delete { color: var(--vermelho); }
+.action-btn-edit:hover { background: var(--azul-claro); }
+.action-btn-delete:hover { background: #fef2f2; }
+
+/* --- 5. MODAL MODERNO (IMPROVED) --- */
+.modal { 
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.4); 
+    backdrop-filter: blur(4px); 
+}
+
+.improved-modal {
+    width: 500px !important;
+    padding: 0 !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    border: none !important;
+    background: var(--branco);
+    margin: 5% auto;
+}
+
+.modal-header {
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+    border-bottom: 1px solid var(--borda);
+}
+
+.header-icon-container {
+    width: 50px;
+    height: 50px;
+    background: var(--azul-claro);
+    color: var(--azul-primario);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-fundo);
+    border: 1px solid #e2e8f0;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Inputs do Modal */
+.form-group { padding: 0 25px; margin-top: 15px; }
+.form-group label { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; display: block; }
+.required { color: var(--vermelho); }
+
+.input-with-icon { position: relative; display: flex; align-items: center; }
+.input-with-icon i { position: absolute; left: 15px; color: #94a3b8; }
+
+.input-with-icon input, .input-with-icon select {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--branco);
+}
+
+.modal-footer-improved {
+    margin-top: 25px;
+    padding: 20px 25px;
+    background: var(--bg-fundo);
+    display: flex;
+    gap: 12px;
+}
+
+/* --- 6. AJUSTE FINO PARA IMPRESSÃO --- */
+@media print {
+    /* Esconde o que não deve sair no papel */
+    .sidebar, .toolbar, .close-btn, .modal, .action-btn-edit, .action-btn-delete { 
+        display: none !important; 
+    }
+
+    /* Reseta o fundo e margens para a folha A4 */
+    .content { 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        background-color: white !important;
+    }
+
+    .crud-card { 
+        box-shadow: none !important; 
+        border: none !important; 
+        padding: 0 !important;
+    }
+
+    .page-header {
+        margin-bottom: 20px !important;
+        border-bottom: 2px solid #eee;
+    }
+
+    /* Ajuste de larguras para evitar espaços vazios */
+    table { width: 100% !important; border-collapse: collapse !important; }
+
+    th:nth-child(1), td:nth-child(1) { width: 8%; }   /* ID */
+    th:nth-child(2), td:nth-child(2) { width: 35%; }  /* NOME */
+    th:nth-child(3), td:nth-child(3) { width: 35%; }  /* LOGIN */
+    th:nth-child(4), td:nth-child(4) { width: 22%; }  /* PERFIL */
+
+    th { color: black !important; border-bottom: 1px solid #333 !important; }
+    td { padding: 12px 5px !important; border-bottom: 1px solid #eee !important; }
+
+    /* Força o navegador a imprimir as cores de fundo (badges e avatar) */
+    .badge, .user-avatar {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border: 1px solid #ddd !important;
+    }
+}
+
+
+.btn-pdf {
+    background-color: #f8fafc;
+    color: #ef4444; /* Vermelho para remeter ao PDF */
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-pdf:hover {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+}
+
+/* Esconder o botão de PDF na impressão de papel */
+@media print {
+    .btn-pdf { display: none !important; }
+}

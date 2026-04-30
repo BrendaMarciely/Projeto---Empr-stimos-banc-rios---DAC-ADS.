@@ -199,6 +199,54 @@ app.get("/relatorio_fluxo", (req, res) => {
 
 
 
+// ........................ATENÇÃO, AQUI COMEÇA O CRUD DO SPRINT DE USUÁRIOS...................................)//
+
+
+
+// 1. ROTA PARA LISTAR TODOS OS USUÁRIOS (READ)
+app.get("/listar_usuarios", (req, res) => {
+    const sql = "SELECT usuario_id, nome, login, perfil FROM tbUsuarios ORDER BY nome ASC";
+    conexao.query(sql, (erro, resultado) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao buscar usuários" });
+        res.json(resultado);
+    });
+});
+
+// 2. ROTA PARA EXCLUIR UM USUÁRIO (DELETE)
+app.delete("/excluir_usuario/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM tbUsuarios WHERE usuario_id = ?";
+    conexao.query(sql, [id], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao excluir usuário" });
+        res.json({ msg: "Usuário removido com sucesso!" });
+    });
+});
+
+// 3. ROTA PARA BUSCAR DADOS DE UM USUÁRIO ESPECÍFICO (PARA EDIÇÃO)
+app.get("/usuario_detalhes/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM tbUsuarios WHERE usuario_id = ?";
+    conexao.query(sql, [id], (erro, resultado) => {
+        if (erro) return res.status(500).json(erro);
+        res.json(resultado[0]);
+    });
+});
+
+// 4. ROTA PARA SALVAR A EDIÇÃO (UPDATE)
+app.put("/editar_usuario/:id", (req, res) => {
+    const id = req.params.id;
+    const { nome, login, perfil } = req.body;
+    const sql = "UPDATE tbUsuarios SET nome = ?, login = ?, perfil = ? WHERE usuario_id = ?";
+    conexao.query(sql, [nome, login, perfil, id], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao atualizar" });
+        res.json({ msg: "Usuário atualizado com sucesso!" });
+    });
+});
+
+
+
+
+
 
 
 

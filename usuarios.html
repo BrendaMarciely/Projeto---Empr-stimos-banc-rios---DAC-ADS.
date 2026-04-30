@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuários - Impulso Financeiro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="usuarios.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+    <div class="logo">
+        <i class="fa-solid fa-arrow-trend-up"></i>
+        <span>Impulso Financeiro</span>
+    </div>
+    <nav>
+        <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i>Dashboard</a>
+        <a href="usuarios.html" class="active"><i class="fa-solid fa-users"></i>Cadastro</a>
+        <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i>Empréstimos</a>
+        <a href="contratos.html"><i class="fa-solid fa-file-contract"></i>Contratos</a>
+        <a href="cronograma.html"><i class="fa-solid fa-calendar"></i>Cronograma</a>
+        <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i>Desembolsos</a>
+        <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i>Pagamentos</a>
+        <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i>Renegociações</a>
+        <a href="notificacoes.html"><i class="fa-solid fa-bell"></i>Notificações</a>
+        <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
+    </nav>
+    <div class="logout">
+        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+    </div>
+</aside>
+
+        <main class="content">
+            <div class="page-header">
+                <div class="header-left">
+                    <div class="icon-circle">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1>Usuários</h1>
+                        <p>Gerencie e acompanhe os usuários cadastrados no sistema.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="crud-card">
+                <div class="toolbar">
+                    <button class="btn btn-blue" onclick="abrirModal()">
+                        <i class="fa-solid fa-plus"></i> Incluir usuário
+                    </button>
+                    <button class="btn btn-gray" onclick="window.print()">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </button>
+                    <button class="btn btn-pdf" onclick="gerarPDF()">
+                        <i class="fa-solid fa-file-pdf"></i> Gerar PDF
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th>NOME</th>
+                                <th>LOGIN / E-MAIL</th>
+                                <th>PERFIL</th>
+                                <th style="text-align: center;">AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaUsuarios">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modalUsuario" class="modal">
+        <div class="modal-content improved-modal">
+            <div class="modal-header">
+                <div class="header-icon-container">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div class="header-text-container">
+                    <h3 id="modalTitulo">Incluir Usuário</h3>
+                    <p>Preencha os dados abaixo para criar um novo usuário.</p>
+                </div>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+
+            <form id="formUsuario">
+                <input type="hidden" id="userId">
+                
+                <div class="form-group">
+                    <label>Nome Completo <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="nome" required placeholder="Digite o nome completo">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Login / E-mail <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="login" required placeholder="exemplo@email.com">
+                    </div>
+                </div>
+
+                <div class="form-group" id="divSenha">
+                    <label>Senha <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="senha" placeholder="Digite a senha">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Perfil de Acesso <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <select id="perfil">
+                            <option value="Tesouraria / Financeiro">Tesouraria / Financeiro</option>
+                            <option value="Gestor Financeiro">Gestor Financeiro</option>
+                            <option value="Contabilidade">Contabilidade</option>
+                            <option value="Compliance / Auditoria">Compliance / Auditoria</option>
+                            <option value="Administrador do Sistema">Administrador do Sistema</option>
+                            <option value="Financeira Externa">Financeira Externa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer-improved">
+                    <button type="submit" class="btn-save">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar Dados
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="fecharModal()">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app";
+
+
+        // --- LISTAR USUÁRIOS ---
+        async function buscarUsuarios() {
+            try {
+                const res = await fetch(`${API_URL}/listar_usuarios`);
+                const usuarios = await res.json();
+                const tbody = document.getElementById("listaUsuarios");
+                tbody.innerHTML = "";
+
+                usuarios.forEach(u => {
+                    const iniciais = u.nome ? u.nome.substring(0, 2).toUpperCase() : "??";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${u.usuario_id}</td>
+                            <td>
+                                <span class="user-avatar">${iniciais}</span>
+                                <strong>${u.nome}</strong>
+                            </td>
+                            <td>${u.login}</td> 
+                            <td>
+                                <span class="badge">
+                                    <i class="fa-solid fa-briefcase"></i> ${u.perfil}
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <button title="Editar" onclick="editar(${u.usuario_id})" class="action-btn-edit"><i class="fa-solid fa-pen"></i></button>
+                                <button title="Excluir" onclick="excluir(${u.usuario_id})" class="action-btn-delete"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error("Erro ao carregar lista:", e); }
+        }
+
+        // --- GERAR PDF ---
+        async function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Cabeçalho do PDF
+            doc.setFontSize(18);
+            doc.setTextColor(30, 41, 59); // Cor --texto-titulo
+            doc.text("Relatório de Usuários - Impulso Financeiro", 14, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Data de Emissão: ${new Date().toLocaleString()}`, 14, 28);
+
+            const rows = [];
+            const tabelaLinhas = document.querySelectorAll("#listaUsuarios tr");
+
+            tabelaLinhas.forEach(linha => {
+                const colunas = linha.querySelectorAll("td");
+                const id = colunas[0].innerText;
+                
+                // Limpa o nome (remove as iniciais do avatar que vêm junto no innerText)
+                let nome = colunas[1].innerText.replace(/^[A-Z?]{2}/, '').trim(); 
+                
+                const login = colunas[2].innerText;
+                const perfil = colunas[3].innerText.trim();
+
+                rows.push([id, nome, login, perfil]);
+            });
+
+            doc.autoTable({
+                startY: 35,
+                head: [['ID', 'Nome', 'Login / E-mail', 'Perfil']],
+                body: rows,
+                theme: 'striped',
+                headStyles: { fillColor: [37, 99, 235] }, // Cor --azul-primario
+                styles: { fontSize: 9, cellPadding: 4 },
+                columnStyles: {
+                    0: { cellWidth: 15 },
+                    1: { cellWidth: 60 },
+                    2: { cellWidth: 65 },
+                    3: { cellWidth: 45 }
+                }
+            });
+
+            doc.save("usuarios_impulso_financeiro.pdf");
+        }
+
+        // --- SALVAR (INCLUIR/EDITAR) ---
+        document.getElementById("formUsuario").onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById("userId").value;
+            const nomeInput = document.getElementById("nome").value.trim();
+            const loginInput = document.getElementById("login").value.trim();
+            const senhaInput = document.getElementById("senha").value;
+            const perfilInput = document.getElementById("perfil").value;
+
+            const regexApenasLetras = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+            if (!regexApenasLetras.test(nomeInput)) {
+                alert("❌ O nome deve conter apenas letras e espaços.");
+                return;
+            }
+
+            const partesNome = nomeInput.split(" ").filter(p => p.length > 0);
+            if (partesNome.length < 2) {
+                alert("❌ Por favor, digite o nome completo (nome e sobrenome).");
+                return;
+            }
+
+            const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!regexEmail.test(loginInput)) {
+                alert("❌ E-mail inválido! Não utilize acentos ou caracteres especiais.");
+                return;
+            }
+
+            if (!id) {
+                const regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                if (!regexSenha.test(senhaInput)) {
+                    alert("❌ Senha fraca!\n\nA senha precisa de:\n- Mínimo 8 caracteres\n- Uma letra maiúscula\n- Um número\n- Um caractere especial (@$!%*?&)");
+                    return;
+                }
+            }
+
+            const dados = {
+                nome: nomeInput,
+                login: loginInput,
+                perfil: perfilInput
+            };
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_URL}/editar_usuario/${id}` : `${API_URL}/cadastrar`;
+            
+            if (!id) dados.senha = senhaInput;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dados)
+                });
+
+                if (response.ok) {
+                    fecharModal();
+                    buscarUsuarios();
+                } else {
+                    const erro = await response.json();
+                    alert("Erro: " + (erro.mensagem || "Verifique os dados."));
+                }
+            } catch (err) { alert("Erro ao conectar com o servidor."); }
+        };
+
+        // --- AUXILIARES ---
+        async function excluir(id) {
+            if(confirm("Deseja realmente excluir este usuário?")) {
+                await fetch(`${API_URL}/excluir_usuario/${id}`, { method: 'DELETE' });
+                buscarUsuarios();
+            }
+        }
+
+        async function editar(id) {
+            const res = await fetch(`${API_URL}/usuario_detalhes/${id}`);
+            const u = await res.json();
+            document.getElementById("userId").value = u.usuario_id;
+            document.getElementById("nome").value = u.nome;
+            document.getElementById("login").value = u.login;
+            document.getElementById("perfil").value = u.perfil;
+            document.getElementById("divSenha").style.display = "none";
+            document.getElementById("modalTitulo").innerText = "Editar Usuário";
+            document.getElementById("modalUsuario").style.display = "block";
+        }
+
+        function abrirModal() {
+            document.getElementById("formUsuario").reset();
+            document.getElementById("userId").value = "";
+            document.getElementById("divSenha").style.display = "block";
+            document.getElementById("modalTitulo").innerText = "Incluir Usuário";
+            document.getElementById("modalUsuario").style.display = "block";
+        }
+
+        function fecharModal() { document.getElementById("modalUsuario").style.display = "none"; }
+        function logout() { localStorage.removeItem("usuarioLogado"); window.location.href = "login.html"; }
+
+        window.onload = buscarUsuarios;
+    </script>
+</body>
+</html>

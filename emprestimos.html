@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="emprestimos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
@@ -20,15 +23,16 @@
                     <span>Impulso Financeiro</span>
                 </div>
                 <nav>
-    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i> Dashboard</a>
-    <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i> Empréstimos</a>
-    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i> Contratos</a>
-    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i> Cronograma</a>
-    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i> Desembolsos</a>
-    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i> Pagamentos</a>
-    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i> Renegociações</a>
-    <a href="notificacoes.html"><i class="fa-solid fa-bell"></i> Notificações</a>
-    <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i> Relatórios</a>
+    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i>Dashboard</a>
+    <a href="usuarios.html"><i class="fa-solid fa-users"></i>Cadastro</a>
+    <a href="emprestimos.html" class="active"><i class="fa-solid fa-building-columns"></i>Empréstimos</a>
+    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i>Contratos</a>
+    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i>Cronograma</a>
+    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i>Desembolsos</a>
+    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i>Pagamentos</a>
+    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i>Renegociações</a>
+    <a href="notificacoes.html"><i class="fa-solid fa-bell"></i>Notificações</a>
+    <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
 </nav>
             </div>
             <div class="logout">
@@ -54,6 +58,10 @@
                     <option value="ativo">Ativo</option>
                     <option value="encerrado">Encerrado</option>
                 </select>
+
+                <button class="btn-pdf" onclick="gerarPDFEmprestimos()" style="margin-left: 10px; cursor: pointer;">
+                    <i class="fa-solid fa-file-pdf"></i> Gerar PDF
+                </button>
             </div>
 
             <table>
@@ -69,7 +77,7 @@
                     </tr>
                 </thead>
                 <tbody id="tabelaEmprestimos">
-                </tbody>
+                    </tbody>
             </table>
         </main>
     </div>
@@ -86,7 +94,6 @@
                 dados.forEach(emp => {
                     const dataInicio = new Date(emp.data).toLocaleDateString("pt-BR");
                     const dataFim = new Date(emp.vencimento).toLocaleDateString("pt-BR");
-
                     const statusClass = emp.status.toLowerCase() === 'ativo' ? 'active' : 'inactive';
 
                     tabela.innerHTML += `
@@ -109,14 +116,60 @@
                     `;
                 });
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 alert("Erro ao carregar empréstimos");
             }
         }
 
+        // --- FUNÇÃO PARA GERAR PDF (RESPEITANDO FILTROS) ---
+        async function gerarPDFEmprestimos() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Modo Paisagem
+
+            doc.setFontSize(18);
+            doc.text("Relatório de Gestão de Empréstimos", 14, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Emitido em: ${new Date().toLocaleString()}`, 14, 28);
+
+            const rows = [];
+            const linhasVisiveis = document.querySelectorAll("#tabelaEmprestimos tr");
+
+            linhasVisiveis.forEach(linha => {
+                // Só adiciona ao PDF se a linha estiver visível na tela
+                if (linha.style.display !== "none") {
+                    const col = linha.querySelectorAll("td");
+                    rows.push([
+                        col[0].innerText, // Credor
+                        col[1].innerText, // Valor
+                        col[2].innerText, // Taxa
+                        col[3].innerText, // Início
+                        col[4].innerText, // Término
+                        col[5].innerText  // Status
+                    ]);
+                }
+            });
+
+            if (rows.length === 0) {
+                alert("Não há dados na tabela para gerar o PDF.");
+                return;
+            }
+
+            doc.autoTable({
+                startY: 35,
+                head: [['Credor', 'Valor', 'Taxa', 'Início', 'Término', 'Status']],
+                body: rows,
+                theme: 'striped',
+                headStyles: { fillColor: [37, 99, 235] },
+                styles: { fontSize: 9 }
+            });
+
+            doc.save("relatorio_emprestimos.pdf");
+        }
+
         // --- FUNÇÃO PARA REDIRECIONAR PARA EDIÇÃO ---
         function editarEmprestimo(id) {
-            // Manda o usuário para a nova tela levando o ID na URL
             window.location.href = `editar-emprestimo.html?id=${id}`;
         }
 
@@ -128,7 +181,6 @@
                         method: 'DELETE'
                     });
                     const resultado = await resposta.json();
-
                     alert(resultado.msg);
                     carregarEmprestimos();
                 } catch (e) {
@@ -137,7 +189,7 @@
             }
         }
 
-        // --- FUNÇÃO PARA FILTROS ---
+        // --- FUNÇÃO PARA APLICAR FILTROS NA TELA ---
         function aplicarFiltro() {
             const texto = document.getElementById("buscaCredor").value.toLowerCase();
             const statusSelecionado = document.getElementById("filtroStatus").value;
@@ -155,9 +207,8 @@
         document.getElementById("buscaCredor").addEventListener("keyup", aplicarFiltro);
         document.getElementById("filtroStatus").addEventListener("change", aplicarFiltro);
 
-        carregarEmprestimos();
+        window.onload = carregarEmprestimos;
     </script>
 
 </body>
-
 </html>

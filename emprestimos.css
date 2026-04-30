@@ -301,3 +301,27 @@ color:black;
 .status.active { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 .status.inactive { background: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 
+.btn-pdf {
+    background-color: #ffffff;
+    color: #dc2626; /* Vermelho PDF */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-pdf:hover {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    transform: translateY(-1px);
+}
+
+/* Esconder na impressão comum de papel */
+@media print {
+    .btn-pdf { display: none !important; }
+}
