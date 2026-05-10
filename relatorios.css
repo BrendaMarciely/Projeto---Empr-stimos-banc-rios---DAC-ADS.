@@ -1,62 +1,167 @@
 /* ================================= */
+/* RESET E LAYOUT PADRÃO             */
+/* ================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f3f4f6;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ================================= */
+/* SIDEBAR CORRIGIDA (PADRÃO)        */
+/* ================================= */
+
+.sidebar {
+    width: 260px;
+    background: #1f2d3d;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 0;
+    position: fixed; /* Mantém a barra fixa */
+    height: 100vh;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 30px;
+    padding: 0 25px;
+}
+
+.logo i {
+    color: #4f9cff;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1; /* Empurra o logout para baixo */
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 25px;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+/* ALINHAMENTO DOS ÍCONES */
+.sidebar nav a i, 
+.logout a i {
+    min-width: 24px;
+    text-align: center;
+    font-size: 18px;
+    transform: translateY(2px); /* Alinhamento para baixo */
+    display: inline-block;
+}
+
+.sidebar nav a:hover {
+    background: #334155;
+    color: white;
+}
+
+/* ITEM ATIVO (RELATÓRIOS) */
+.sidebar nav a.active {
+    background: #334155;
+    color: white;
+    border-left: 4px solid #4f9cff;
+}
+
+/* BOTÃO SAIR NO RODAPÉ */
+.logout {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: auto; 
+    padding: 10px 0;
+}
+
+.logout a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 25px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+}
+
+.logout a:hover {
+    color: #ef4444;
+}
+
+/* ================================= */
+/* CONTEÚDO PRINCIPAL                */
+/* ================================= */
+
+.content {
+    flex: 1;
+    margin-left: 260px; /* Abre espaço para a sidebar fixa */
+    padding: 40px;
+}
+
+.content h1 {
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+/* ================================= */
 /* CARD PADRÃO                       */
 /* ================================= */
 
-.card{
-
-background:white;
-padding:25px;
-border-radius:10px;
-margin-top:25px;
-
-box-shadow:0 2px 8px rgba(0,0,0,0.05);
-
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-
-.card h2{
-
-margin-bottom:20px;
-font-size:20px;
-font-weight:600;
-
-}
-
 
 /* ================================= */
 /* TABELA RELATÓRIOS                 */
 /* ================================= */
 
-.tabela-relatorio{
-
-width:100%;
-border-collapse:collapse;
-
+.tabela-relatorio {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.tabela-relatorio thead{
-
-background:#f1f3f6;
-
+.tabela-relatorio thead {
+    background: #f1f3f6;
 }
 
-.tabela-relatorio th{
-
-text-align:left;
-padding:15px;
-font-weight:600;
-color:#555;
-
+.tabela-relatorio th {
+    text-align: left;
+    padding: 15px;
+    font-weight: 600;
+    color: #555;
 }
 
-.tabela-relatorio td{
-
-padding:15px;
-border-bottom:1px solid #eee;
-
+.tabela-relatorio td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
 }
 
-.tabela-relatorio tr:hover{
-
-background:#f9fafb;
-
+.tabela-relatorio tr:hover {
+    background: #f9fafb;
 }

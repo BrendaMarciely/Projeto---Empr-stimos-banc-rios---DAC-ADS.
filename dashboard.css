@@ -1,195 +1,221 @@
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 body{
-background:#f3f4f6;
+    background:#f3f4f6;
 }
 
 /* Layout */
-
 .layout{
-display:flex;
-min-height:100vh;
+    display:flex;
+    min-height:100vh;
 }
 
 /* Sidebar */
-
 .sidebar{
-width:260px;
-background:#1f2d3d;
-color:white;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-padding:25px;
+    width:260px;
+    background:#1f2d3d; /* Cor original mantida */
+    color:white;
+    display:flex;
+    flex-direction:column;
+    padding:25px 0; /* Ajustado para controlar o padding lateral nos itens */
+    position: fixed;
+    height: 100vh;
 }
 
 .logo{
-display:flex;
-align-items:center;
-gap:10px;
-font-size:18px;
-font-weight:bold;
-margin-bottom:30px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:30px;
+    padding: 0 25px; /* Alinhamento com os links */
 }
 
 .logo i{
-font-size:20px;
-color:#4f9cff;
+    font-size:20px;
+    color:#4f9cff;
+    min-width: 20px; /* Alinhamento do ícone da logo */
+    text-align: center;
 }
 
 .sidebar nav{
-display:flex;
-flex-direction:column;
-gap:8px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    flex: 1; /* Faz o nav ocupar o espaço e empurrar o logout para baixo */
 }
 
 .sidebar nav a{
-display:flex;
-align-items:center;
-gap:10px;
-padding:10px;
-border-radius:6px;
-color:#cbd5e1;
-text-decoration:none;
-cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 25px;
+    color:#cbd5e1;
+    text-decoration:none;
+    transition: all 0.2s;
+}
+
+/* AJUSTE DE ALINHAMENTO: Força todos os ícones a terem a mesma largura */
+.sidebar nav a i,
+.logout a i {
+    min-width: 24px; 
+    text-align: center;
+    font-size: 18px;
 }
 
 .sidebar nav a:hover{
-background:#334155;
+    background:#334155;
+    color: white;
 }
 
+/* Estado Ativo */
 .sidebar .active{
-background:#334155;
-color:white;
+    background:#334155;
+    color:white;
+    border-left: 4px solid #4f9cff; /* Detalhe visual de destaque */
+}
+
+/* Botão Sair no Rodapé */
+.logout {
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .logout a{
-display:flex;
-align-items:center;
-gap:10px;
-color:#cbd5e1;
-text-decoration:none;
-margin-top:30px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 25px;
+    color:#cbd5e1;
+    text-decoration:none;
+    transition: 0.2s;
+}
+
+.logout a:hover {
+    color: #ef4444; /* Destaque para o Sair */
 }
 
 /* Conteúdo */
-
 .content{
-flex:1;
-padding:40px;
+    flex:1;
+    padding:40px;
+    margin-left: 260px; /* Compensa a sidebar fixa */
 }
 
 .content h1{
-margin-bottom:30px;
+    margin-bottom:30px;
+    font-weight: 800; /* Negrito pesado como solicitado antes */
 }
 
-/* Cards */
-
+/* Cards de Indicadores */
 .cards{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
 }
 
 .card{
-background:white;
-padding:25px;
-border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
 .card-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-color:#555;
-margin-bottom:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#555;
+    margin-bottom:15px;
 }
 
 .card-value{
-font-size:28px;
-font-weight:bold;
+    font-size:28px;
+    font-weight:bold;
 }
 
 .card p{
-font-size:13px;
-color:#777;
-margin-top:5px;
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
 }
 
-/* cores ícones */
+/* Cores ícones */
+.blue{ color:#3b82f6; }
+.red{ color:#ef4444; }
+.orange{ color:#f59e0b; }
 
-.blue{
-color:#3b82f6;
-}
-
-.red{
-color:#ef4444;
-}
-
-.orange{
-color:#f59e0b;
-}
-
-/* ========================================= */
-/* CARD DE CONTEÚDO (CONTRATOS) */
-/* ========================================= */
-
-.card{
-
-background:white;
-
-padding:30px;
-
-border-radius:10px;
-
-margin-top:20px;
-
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
-
-}
-
-.card h2{
-
-margin-bottom:15px;
-
-}
-
-.card p{
-
-color:#6b7280;
-
-}
-
+/* Banner Dashboard */
 .banner-dashboard{
-width: 100%;
-height: 160px;
-border-radius: 12px;
-
-background-image: 
-url("azul1.jpg");
-
-background-size: cover;
-background-position: center;
-
-display: flex;
-align-items: center;
-padding-left: 40px;
-margin-bottom: 30px;
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    background-image: url("azul1.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding-left: 40px;
+    margin-bottom: 30px;
 }
 
 .banner-texto h1{
-color: white;
-font-size: 32px;
-margin-bottom: 5px;
+    color: white;
+    font-size: 32px;
+    margin-bottom: 5px;
 }
 
 .banner-texto p{
-color: #eaf4ff;
-font-size: 15px;
+    color: #eaf4ff;
+    font-size: 15px;
+}
+
+/* --- ADICIONE/CORRIJA ESTA PARTE NO FINAL DO SEU CSS --- */
+
+/* 1. Transições suaves para todos os elementos afetados */
+.sidebar, .content, .logo span, nav a span, .logout a span {
+    transition: all 0.3s ease;
+}
+
+/* 2. Quando a sidebar estiver fechada */
+.sidebar.fechada {
+    width: 80px;
+}
+
+/* 3. Esconde o texto (Isso só funciona se o texto no HTML estiver em <span>) */
+.sidebar.fechada .logo span,
+.sidebar.fechada nav a span,
+.sidebar.fechada .logout a span {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* 4. Centraliza os ícones e remove gaps no modo fechado */
+.sidebar.fechada nav a,
+.sidebar.fechada .logout a,
+.sidebar.fechada .logo {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0; /* Remove o espaço entre ícone e texto invisível */
+}
+
+/* 5. AJUSTE DO CONTEÚDO (O mais importante) */
+/* Usamos !important para garantir que ele vença os 260px fixos */
+.sidebar.fechada ~ .content {
+    margin-left: 80px !important;
+}
+
+/* Ajuste fino dos ícones na barra fechada */
+.sidebar.fechada nav a i, 
+.sidebar.fechada .logout a i {
+    min-width: 80px; /* O ícone ocupa toda a largura disponível */
+    margin: 0;
 }

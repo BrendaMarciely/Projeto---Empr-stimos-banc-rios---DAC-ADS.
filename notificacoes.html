@@ -15,23 +15,44 @@
     <div class="layout">
         <aside class="sidebar">
             <div class="logo">
-                <i class="fa-solid fa-arrow-trend-up"></i>
+                <div id="btn-expandir" onclick="toggleSidebar()" style="cursor: pointer;">
+                    <i class="fa-solid fa-bars" id="btn-icon"></i>
+                </div>
                 <span>Impulso Financeiro</span>
             </div>
+            
             <nav>
-    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i>Dashboard</a>
-    <a href="usuarios.html"><i class="fa-solid fa-users"></i>Cadastro</a>
-    <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i>Empréstimos</a>
-    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i>Contratos</a>
-    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i>Cronograma</a>
-    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i>Desembolsos</a>
-    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i>Pagamentos</a>
-    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i>Renegociações</a>
-    <a href="notificacoes.html" class="active"><i class="fa-solid fa-bell"></i>Notificações</a>
-    <a href="relatorios.html"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
-</nav>
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="usuarios.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Cadastro</span>
+                </a>
+                <a href="financeiras.html">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Financeiras</span>
+                </a>
+                <a href="emprestimos.html">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Empréstimos</span>
+                </a>
+                <a href="notificacoes.html" class="active">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Notificações</span>
+                </a>
+                <a href="relatorios.html">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Relatórios</span>
+                </a>
+            </nav>
+
             <div class="logout">
-                <a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+                <a href="#" onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sair</span>
+                </a>
             </div>
         </aside>
 
@@ -55,6 +76,20 @@
     </div>
 
     <script>
+        // ⭐ CONTROLE DA SIDEBAR DINÂMICA
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const icon = document.getElementById('btn-icon');
+
+            sidebar.classList.toggle('fechada');
+
+            if (sidebar.classList.contains('fechada')) {
+                icon.classList.replace('fa-bars', 'fa-arrow-right');
+            } else {
+                icon.classList.replace('fa-arrow-right', 'fa-bars');
+            }
+        }
+
         async function carregarNotificacoes() {
             try {
                 const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/alertas_notificacoes");
@@ -63,7 +98,6 @@
                 const listaAtrasados = document.getElementById("containerAtrasados");
                 const listaProximos = document.getElementById("containerProximos");
 
-                // 1. Limpar e Renderizar Atrasados
                 listaAtrasados.innerHTML = "";
                 if (atrasados.length === 0) {
                     listaAtrasados.innerHTML = '<div class="alert-item"><p>Nenhum atraso detectado. Tudo em dia! ✅</p></div>';
@@ -81,7 +115,6 @@
                     });
                 }
 
-                // 2. Limpar e Renderizar Próximos
                 listaProximos.innerHTML = "";
                 if (proximos.length === 0) {
                     listaProximos.innerHTML = '<div class="alert-item"><p>Nenhum vencimento para os próximos 15 dias.</p></div>';
@@ -108,7 +141,11 @@
             }
         }
 
-        // Iniciar ao carregar a página
+        function logout() { 
+            localStorage.removeItem("usuarioLogado"); 
+            window.location.href = "index.html"; 
+        }
+
         window.onload = carregarNotificacoes;
     </script>
 </body>

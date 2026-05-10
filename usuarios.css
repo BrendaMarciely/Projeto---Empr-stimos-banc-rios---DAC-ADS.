@@ -325,3 +325,19 @@ td {
 }
 
 
+/* Só o essencial para não quebrar o visual da sidebar e conteúdo ao fechar a sidebar */
+.sidebar { transition: all 0.3s ease; }
+.content { transition: all 0.3s ease; }
+
+.sidebar.fechada span { 
+    display: none; 
+}
+
+.sidebar.fechada {
+    width: 80px !important;
+}
+
+.sidebar.fechada a {
+    justify-content: center;
+    padding-left: 0 !important;
+}

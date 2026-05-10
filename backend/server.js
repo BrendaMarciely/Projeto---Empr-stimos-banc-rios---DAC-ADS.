@@ -4,7 +4,7 @@ const cors = require("cors")
 
 const app = express()
 
-// Configuração do CORS para permitir que o Vercel acesse o Railway
+// Configuração do CORS
 app.use(cors())
 app.use(express.json())
 
@@ -25,51 +25,97 @@ conexao.connect((erro) => {
     }
 })
 
+// ================= DASHBOARD (FILTRANDO APENAS ATIVOS) =================
+app.get("/dashboard_resumo", (req, res) => {
+    // 1. total_pedidos: Conta apenas onde o status é 'Ativo'
+    // 2. soma_total: Soma o valor apenas dos 'Ativos'
+    // 3. total_credores: Conta as financeiras
+    // 4. parcelas_proximas: Conta parcelas na tbContasPagar que vencem nos próximos 30 dias
+    const sql = `
+        SELECT 
+            (SELECT COUNT(*) FROM tbEmprestimos WHERE status = 'Ativo') as total_pedidos,
+            (SELECT IFNULL(SUM(valor), 0) FROM tbEmprestimos WHERE status = 'Ativo') as soma_total,
+            (SELECT COUNT(*) FROM tbFinanceira) as total_credores,
+            (SELECT COUNT(*) FROM tbContasPagar 
+             WHERE data_vencimento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)) as parcelas_proximas
+    `;
+
+    conexao.query(sql, (erro, resultado) => {
+        if (erro) {
+            console.error("❌ Erro no SQL do Dashboard:", erro);
+            return res.status(500).json({ msg: "Erro interno" });
+        }
+        // Envia o objeto com os 4 valores para o HTML
+        res.json(resultado[0]);
+    });
+});
+// Rota para buscar detalhes de um empréstimo (AJUSTADA)
+app.get("/buscar_emprestimo/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM tbEmprestimos WHERE emprestimo_id = ?";
+    conexao.query(sql, [id], (erro, resultado) => {
+        if (erro) return res.status(500).json({ msg: "Erro no banco" });
+        if (resultado.length === 0) return res.status(404).json({ msg: "Empréstimo não encontrado" });
+        res.json(resultado[0]);
+    });
+});
+// ================= EDITAR EMPRÉSTIMO (VIA MODAL) =================
+app.put("/editar_emprestimo/:id", (req, res) => {
+    const id = req.params.id;
+    const { valor, taxa, status } = req.body;
+    
+    const sql = `
+        UPDATE tbEmprestimos 
+        SET valor = ?, taxa_juros = ?, status = ?, atualizado_em = NOW() 
+        WHERE emprestimo_id = ?
+    `;
+    
+    conexao.query(sql, [valor, taxa, status, id], (erro, resultado) => {
+        if (erro) return res.status(500).json({ msg: "Erro ao atualizar" });
+        res.json({ msg: "Empréstimo atualizado com sucesso! ✅" });
+    });
+});
+
 // ================= CADASTRAR EMPRÉSTIMO + PARCELAS =================
 app.post("/cadastrar_emprestimo", (req, res) => {
-    const { credor, valor, taxa, data, vencimento, parcelas, usuario_id } = req.body;
+    const { credor, valor, taxa, data, vencimento, parcelas, usuario_id, financeira_id } = req.body;
 
     const valorNum = parseFloat(valor);
     const taxaNum = parseFloat(taxa);
     const qtdParcelas = parseInt(parcelas);
+    const finId = parseInt(financeira_id) || 1;
 
     const sqlEmprestimo = `
         INSERT INTO tbEmprestimos 
         (credor, valor, taxa_juros, data, vencimento, financeira_id, atualizado_por, status) 
-        VALUES (?, ?, ?, ?, ?, 1, ?, 'Ativo')
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'Ativo')
     `;
 
-    conexao.query(sqlEmprestimo, [credor, valorNum, taxaNum, data, vencimento, usuario_id || 1], (erro, resultado) => {
+    conexao.query(sqlEmprestimo, [credor, valorNum, taxaNum, data, vencimento, finId, usuario_id || 1], (erro, resultado) => {
         if (erro) {
-            console.log("❌ Erro SQL no Empréstimo:", erro.sqlMessage);
+            console.error("Erro ao inserir empréstimo:", erro);
             return res.status(500).json({ msg: "Erro ao salvar empréstimo" });
         }
 
         const emprestimoId = resultado.insertId;
         const valorCadaParcela = valorNum / qtdParcelas;
         
-        console.log(`🚀 Gerando ${qtdParcelas} parcelas para o empréstimo ${emprestimoId}...`);
+        // Vamos criar um array de promessas para garantir que todas as parcelas sejam inseridas
+        let insercoes = [];
 
         for (let i = 1; i <= qtdParcelas; i++) {
             let dataBase = new Date(data + "T12:00:00"); 
             dataBase.setMonth(dataBase.getMonth() + i);
-            
-            const ano = dataBase.getFullYear();
-            const mes = String(dataBase.getMonth() + 1).padStart(2, '0');
-            const dia = String(dataBase.getDate()).padStart(2, '0');
-            const dataFinalMySQL = `${ano}-${mes}-${dia}`;
+            const dataFinalMySQL = dataBase.toISOString().split('T')[0];
 
             const sqlParcela = `
                 INSERT INTO tbContasPagar (emprestimo_id, valor, data_vencimento, atualizado_em) 
-                VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d'), NOW())
+                VALUES (?, ?, ?, NOW())
             `;
             
-            conexao.query(sqlParcela, [emprestimoId, valorCadaParcela, dataFinalMySQL], (err) => {
-                if (err) {
-                    console.log(`❌ ERRO NA PARCELA ${i}:`, err.sqlMessage);
-                } else {
-                    console.log(`✅ Parcela ${i} salva com sucesso! (${dataFinalMySQL})`);
-                }
+            // Executando a inserção da parcela
+            conexao.query(sqlParcela, [emprestimoId, valorCadaParcela, dataFinalMySQL], (errP) => {
+                if (errP) console.error("Erro ao inserir parcela " + i, errP);
             });
         }
 
@@ -86,16 +132,39 @@ app.get("/listar_emprestimos", (req, res) => {
     });
 });
 
-// ================= LOGIN & USUÁRIOS =================
-app.post("/cadastrar", (req, res) => {
-    const { nome, login, senha, perfil } = req.body;
-    const sql = `INSERT INTO tbUsuarios (nome, login, senha, perfil) VALUES (?, ?, ?, ?)`;
-    conexao.query(sql, [nome, login, senha, perfil || 'Tesouraria'], (erro) => {
-        if (erro) return res.json({ msg: "Erro ao cadastrar" });
-        res.json({ msg: "Usuário cadastrado com sucesso" });
+// ================= EXCLUIR EMPRÉSTIMO + PARCELAS =================
+app.delete("/excluir_emprestimo/:id", (req, res) => {
+    const id = req.params.id;
+    conexao.beginTransaction((errB) => {
+        if (errB) return res.status(500).json({ msg: "Erro ao processar" });
+
+        const sqlParcelas = "DELETE FROM tbContasPagar WHERE emprestimo_id = ?";
+        conexao.query(sqlParcelas, [id], (erroP) => {
+            if (erroP) return conexao.rollback(() => res.status(500).json({ msg: "Erro nas parcelas" }));
+
+            const sqlEmprestimo = "DELETE FROM tbEmprestimos WHERE emprestimo_id = ?";
+            conexao.query(sqlEmprestimo, [id], (erroE) => {
+                if (erroE) return conexao.rollback(() => res.status(500).json({ msg: "Erro no empréstimo" }));
+
+                conexao.commit((errC) => {
+                    if (errC) return conexao.rollback(() => res.status(500).json({ msg: "Erro final" }));
+                    res.json({ msg: "Removido com sucesso! ✅" });
+                });
+            });
+        });
     });
 });
 
+// ================= CRUD FINANCEIRAS =================
+app.get("/listar_financeiras", (req, res) => {
+    const sql = "SELECT * FROM tbFinanceira ORDER BY financeira_id DESC";
+    conexao.query(sql, (erro, resultado) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao listar" });
+        res.json(resultado);
+    });
+});
+
+// ================= LOGIN & USUÁRIOS =================
 app.post("/login", (req, res) => {
     const { login, senha } = req.body;
     const sql = `SELECT usuario_id, nome FROM tbUsuarios WHERE login = ? AND senha = ?`;
@@ -105,153 +174,15 @@ app.post("/login", (req, res) => {
     });
 });
 
-// ================= EXCLUIR =================
-app.delete("/excluir_emprestimo/:id", (req, res) => {
-    const id = req.params.id;
-    const sql = "DELETE FROM tbEmprestimos WHERE emprestimo_id = ?";
-    conexao.query(sql, [id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao excluir" });
-        res.json({ msg: "Empréstimo removido com sucesso!" });
-    });
-});
-
-// ================= EDIÇÃO =================
-app.get("/emprestimo/:id", (req, res) => {
-    const id = req.params.id;
-    const sql = "SELECT * FROM tbEmprestimos WHERE emprestimo_id = ?";
-    conexao.query(sql, [id], (erro, resultado) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao buscar" });
-        res.json(resultado[0]);
-    });
-});
-
-app.put("/editar_emprestimo/:id", (req, res) => {
-    const id = req.params.id;
-    const { credor, valor, taxa, data, vencimento, status } = req.body;
-    const sql = `UPDATE tbEmprestimos SET credor = ?, valor = ?, taxa_juros = ?, data = ?, vencimento = ?, status = ? WHERE emprestimo_id = ?`;
-    conexao.query(sql, [credor, valor, taxa, data, vencimento, status, id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao atualizar" });
-        res.json({ msg: "Empréstimo atualizado com sucesso! ✅" });
-    });
-});
-
-// ================= DASHBOARD =================
-app.get("/dashboard_resumo", (req, res) => {
-    const sql = `SELECT COUNT(*) as total_pedidos, SUM(valor) as soma_total, COUNT(DISTINCT credor) as total_credores FROM tbEmprestimos`;
-    conexao.query(sql, (erro, resultado) => {
-        if (erro) return res.status(500).json({ msg: "Erro no dashboard" });
-        res.json(resultado[0]);
-    });
-});
-
-// ================= NOTIFICAÇÕES =================
-app.get("/alertas_notificacoes", (req, res) => {
-    const sql = `SELECT credor, vencimento, DATEDIFF(vencimento, CURDATE()) as dias_diferenca FROM tbEmprestimos WHERE status = 'Ativo' ORDER BY vencimento ASC`;
-    conexao.query(sql, (erro, resultados) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao buscar alertas" });
-        const atrasados = resultados.filter(item => item.dias_diferenca < 0);
-        const proximos = resultados.filter(item => item.dias_diferenca >= 0 && item.dias_diferenca <= 15);
-        res.json({ atrasados, proximos });
-    });
-});
-
-// ================= RELATÓRIO CREDORES =================
-app.get("/relatorio_credores", (req, res) => {
-    const sql = `SELECT credor, SUM(valor) as saldo_devedor, (SUM(valor) / (SELECT SUM(valor) FROM tbEmprestimos) * 100) as porcentagem FROM tbEmprestimos GROUP BY credor ORDER BY saldo_devedor DESC`;
-    conexao.query(sql, (erro, resultados) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao gerar relatório" });
-        res.json(resultados);
-    });
-});
-
-// ================= RELATÓRIO FLUXO DE CAIXA =================
-app.get("/relatorio_fluxo", (req, res) => {
-    const sql = `
-        SELECT 
-            DATE_FORMAT(STR_TO_DATE(data_vencimento, '%Y%m%d'), '%b/%Y') as mes_texto, 
-            SUM(valor) as total_saidas
-        FROM tbContasPagar 
-        GROUP BY mes_texto
-        ORDER BY MIN(data_vencimento) ASC 
-        LIMIT 6
-    `;
-    
-    conexao.query(sql, (erro, resultados) => {
-        if (erro) {
-            console.log("❌ Erro detalhado no SQL de fluxo:", erro.sqlMessage);
-            return res.status(500).json({ msg: "Erro ao buscar fluxo", erro: erro.sqlMessage });
-        }
-        
-        const fluxoFormatado = resultados.map(item => {
-            const entradas = 180000; 
-            const saidasReal = parseFloat(item.total_saidas) || 0;
-            return {
-                mes: item.mes_texto,
-                entradas: entradas,
-                saidas: saidasReal,
-                saldo: entradas - saidasReal
-            };
-        });
-        res.json(fluxoFormatado);
-    });
-});
-
-
-
-
-// ........................ATENÇÃO, AQUI COMEÇA O CRUD DO SPRINT DE USUÁRIOS...................................)//
-
-
-
-// 1. ROTA PARA LISTAR TODOS OS USUÁRIOS (READ)
 app.get("/listar_usuarios", (req, res) => {
     const sql = "SELECT usuario_id, nome, login, perfil FROM tbUsuarios ORDER BY nome ASC";
     conexao.query(sql, (erro, resultado) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao buscar usuários" });
+        if (erro) return res.status(500).json({ mensagem: "Erro" });
         res.json(resultado);
     });
 });
 
-// 2. ROTA PARA EXCLUIR UM USUÁRIO (DELETE)
-app.delete("/excluir_usuario/:id", (req, res) => {
-    const id = req.params.id;
-    const sql = "DELETE FROM tbUsuarios WHERE usuario_id = ?";
-    conexao.query(sql, [id], (erro) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao excluir usuário" });
-        res.json({ msg: "Usuário removido com sucesso!" });
-    });
-});
-
-// 3. ROTA PARA BUSCAR DADOS DE UM USUÁRIO ESPECÍFICO (PARA EDIÇÃO)
-app.get("/usuario_detalhes/:id", (req, res) => {
-    const id = req.params.id;
-    const sql = "SELECT * FROM tbUsuarios WHERE usuario_id = ?";
-    conexao.query(sql, [id], (erro, resultado) => {
-        if (erro) return res.status(500).json(erro);
-        res.json(resultado[0]);
-    });
-});
-
-// 4. ROTA PARA SALVAR A EDIÇÃO (UPDATE)
-app.put("/editar_usuario/:id", (req, res) => {
-    const id = req.params.id;
-    const { nome, login, perfil } = req.body;
-    const sql = "UPDATE tbUsuarios SET nome = ?, login = ?, perfil = ? WHERE usuario_id = ?";
-    conexao.query(sql, [nome, login, perfil, id], (erro) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao atualizar" });
-        res.json({ msg: "Usuário atualizado com sucesso!" });
-    });
-});
-
-
-
-
-
-
-
-
-
-// Ajuste para o Railway escolher a porta automaticamente
+// Railway Escolha Automática
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);

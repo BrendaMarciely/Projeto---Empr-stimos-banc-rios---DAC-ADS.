@@ -4,37 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Empréstimo | Impulso Financeiro</title>
+    <title>Gerenciar Empréstimo | Impulso Financeiro</title>
     <link rel="stylesheet" href="emprestimos.css">
+    <style>
+        .required-mark {
+            color: #dc2626;
+            margin-left: 4px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
     <div class="cadastro-container">
         <div class="cadastro-card">
-            <h2>Cadastrar Empréstimo</h2>
-            <p>Preencha os dados para gerar o contrato e as parcelas.</p>
+            <h2 id="tituloTela">Cadastrar Empréstimo</h2>
+            <p id="subtituloTela">Campos marcados com <span class="required-mark">*</span> são obrigatórios.</p>
 
             <form id="formEmprestimo">
-                <label>Credor</label>
-                <input type="text" id="credor" placeholder="Ex: Banco do Brasil" required>
+                <label>Instituição Financeira (Credor)<span class="required-mark">*</span></label>
+                <select id="financeira_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 8px; margin-bottom: 16px;">
+                    <option value="">Carregando bancos...</option>
+                </select>
 
-                <label>Valor do Empréstimo (R$)</label>
-                <input type="number" id="valor" placeholder="Ex: 5000" step="0.01" required>
+                <label>Valor do Empréstimo (Mín. R$ 100,00)<span class="required-mark">*</span></label>
+                <input type="text" id="valor" placeholder="R$ 0,00" 
+                       oninput="formatarMoeda(this); validarRegraParcelas()" 
+                       onkeydown="if(event.key==='e' || event.key==='E') event.preventDefault()"
+                       maxlength="18" required>
 
-                <label>Taxa de Juros (% ao ano)</label>
-                <input type="number" step="0.01" id="taxa" placeholder="Ex: 12.5" required>
+                <label>Taxa de Juros (% ao ano)<span class="required-mark">*</span></label>
+                <input type="text" id="taxa" placeholder="0,00 % a.a." oninput="formatarTaxa(this)" required>
 
-                <label>Número de Parcelas</label>
-                <input type="number" id="parcelas" placeholder="Ex: 12" min="1" required>
+                <label>Número de Parcelas (Min. R$ 20,00/parc.)<span class="required-mark">*</span></label>
+                <input type="number" id="parcelas" placeholder="Ex: 12" min="1" max="480" oninput="validarRegraParcelas(); calcularDataTermino()" required>
 
-                <label>Data de Início</label>
-                <input type="date" id="data" required>
+                <label>Data de Início<span class="required-mark">*</span></label>
+                <input type="date" id="data" onchange="calcularDataTermino()" required>
 
-                <label>Data de Término (Previsão)</label>
-                <input type="date" id="vencimento" required>
+                <label>Data de Término (Calculada pelo sistema)</label>
+                <input type="date" id="vencimento" readonly style="background-color: #f1f5f9; cursor: not-allowed;" required>
+
+                <div id="areaStatus" style="display: none;">
+    <label>Status do Empréstimo<span class="required-mark">*</span></label>
+    <select id="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 8px; margin-bottom: 16px;">
+        <option value="Ativo">Ativo</option>
+        <option value="Encerrado">Encerrado</option>
+    </select>
+</div>
 
                 <div class="botoes">
-                    <button type="button" onclick="salvarEmprestimo()">Salvar e Gerar Parcelas</button>
+                    <button type="button" id="btnAcao" onclick="processarEmprestimo()">Salvar e Gerar Parcelas</button>
                     <a href="emprestimos.html" class="cancelar">Cancelar</a>
                 </div>
             </form>
@@ -42,52 +62,166 @@
     </div>
 
     <script>
-        async function salvarEmprestimo() {
-            // Pegando os valores dos campos
-            const credor = document.getElementById("credor").value;
-            const valor = document.getElementById("valor").value;
-            const taxa = document.getElementById("taxa").value;
-            const parcelas = document.getElementById("parcelas").value;
-            const data = document.getElementById("data").value;
-            const vencimento = document.getElementById("vencimento").value;
+        const API_URL = "https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app";
+        const urlParams = new URLSearchParams(window.location.search);
+        const emprestimoId = urlParams.get('id');
 
-            // Validação simples para não enviar campos vazios
-            if (!credor || !valor || !parcelas || !data) {
-                alert("Por favor, preencha todos os campos obrigatórios.");
+        function formatarMoeda(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+            if (parseInt(valor) > 10000000000) valor = "10000000000";
+            if (valor === "") { campo.value = ""; return; }
+            valor = (valor / 100).toFixed(2) + "";
+            valor = valor.replace(".", ",");
+            valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            campo.value = "R$ " + valor;
+        }
+
+        function formatarTaxa(campo) {
+            let valor = campo.value.replace(/\D/g, "");
+            if (valor === "") { campo.value = ""; return; }
+            if (parseInt(valor) > 10000) valor = "10000";
+            valor = (valor / 100).toFixed(2) + "";
+            valor = valor.replace(".", ",");
+            campo.value = valor + " % a.a.";
+        }
+
+        function limparParaBanco(valorFormatado) {
+            if (!valorFormatado) return 0;
+            let limpo = valorFormatado.replace(/[R$\s%a.a]/g, "").replace(/\./g, "").replace(",", ".");
+            return parseFloat(limpo);
+        }
+
+        // --- NOVA LÓGICA: VALIDAÇÃO DE PARCELA MÍNIMA (R$ 20,00) ---
+        function validarRegraParcelas() {
+            const campoParcelas = document.getElementById("parcelas");
+            const valorTotal = limparParaBanco(document.getElementById("valor").value);
+            const numParcelas = parseInt(campoParcelas.value);
+            
+            if (valorTotal > 0 && numParcelas > 0) {
+                const valorParcela = valorTotal / numParcelas;
+                const maxParcelasPermitidas = Math.floor(valorTotal / 20);
+
+                // Se a parcela for menor que 20 reais, o sistema corrige e avisa
+                if (valorParcela < 20) {
+                    campoParcelas.value = maxParcelasPermitidas > 0 ? maxParcelasPermitidas : 1;
+                    calcularDataTermino();
+                }
+            }
+            
+            // Travas básicas de limite
+            if (campoParcelas.value < 1) campoParcelas.value = 1;
+            if (campoParcelas.value > 480) campoParcelas.value = 480; 
+        }
+
+        function calcularDataTermino() {
+            const inputInicio = document.getElementById("data").value;
+            const qtdParcelas = parseInt(document.getElementById("parcelas").value);
+            const inputVencimento = document.getElementById("vencimento");
+            if (inputInicio && qtdParcelas > 0) {
+                let data = new Date(inputInicio + "T12:00:00");
+                data.setMonth(data.getMonth() + qtdParcelas);
+                inputVencimento.value = data.toISOString().split('T')[0];
+            }
+        }
+
+        function configurarRestricoes() {
+            const hoje = new Date().toISOString().split("T")[0];
+            document.getElementById("data").setAttribute("min", hoje);
+        }
+
+        async function inicializarTela() {
+            configurarRestricoes();
+            const selectFin = document.getElementById("financeira_id");
+            try {
+                const resFin = await fetch(`${API_URL}/listar_financeiras`);
+                const financeiras = await resFin.json();
+                selectFin.innerHTML = '<option value="">Selecione uma financeira...</option>';
+                financeiras.forEach(f => {
+                    const opt = document.createElement("option");
+                    opt.value = f.financeira_id;
+                    opt.textContent = f.descricao;
+                    selectFin.appendChild(opt);
+                });
+
+                if (emprestimoId) {
+                    document.getElementById("tituloTela").innerText = "Editar Empréstimo";
+                    document.getElementById("btnAcao").innerText = "Atualizar Empréstimo";
+                    document.getElementById("areaStatus").style.display = "block";
+                    const resEmp = await fetch(`${API_URL}/emprestimo/${emprestimoId}`);
+                    const emp = await resEmp.json();
+                    selectFin.value = emp.financeira_id;
+                    document.getElementById("parcelas").value = emp.parcelas;
+                    document.getElementById("data").value = emp.data.split('T')[0];
+                    document.getElementById("vencimento").value = emp.vencimento.split('T')[0];
+                    if(emp.status) document.getElementById("status").value = emp.status;
+                    const campoV = document.getElementById("valor");
+                    campoV.value = emp.valor.toFixed(2).replace(".", ",");
+                    formatarMoeda(campoV);
+                    const campoT = document.getElementById("taxa");
+                    campoT.value = emp.taxa_juros.toFixed(2).replace(".", ",");
+                    formatarTaxa(campoT);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function processarEmprestimo() {
+            const financiera_id = document.getElementById("financeira_id").value;
+            const valorInput = document.getElementById("valor").value;
+            const taxaInput = document.getElementById("taxa").value;
+            const parcelas = document.getElementById("parcelas").value;
+            const dataInicio = document.getElementById("data").value;
+
+            if (!financiera_id || !valorInput || !taxaInput || !parcelas || !dataInicio) {
+                alert("Preencha todos os campos obrigatórios!");
+                return;
+            }
+
+            const valorFinal = limparParaBanco(valorInput);
+            if (valorFinal < 100) {
+                alert("O valor mínimo permitido é R$ 100,00.");
+                return;
+            }
+
+            // Validação final da parcela mínima antes de salvar
+            if ((valorFinal / parseInt(parcelas)) < 20) {
+                alert("O número de parcelas é muito alto para este valor. A parcela mínima deve ser de R$ 20,00.");
                 return;
             }
 
             const dados = {
-                credor: credor,
-                valor: valor,
-                taxa: taxa,
-                parcelas: parcelas, // Novo campo enviado para o backend
-                data: data,
-                vencimento: vencimento,
-                usuario_id: localStorage.getItem("usuarioId") || 1 
+                financeira_id: parseInt(financiera_id),
+                credor: document.getElementById("financeira_id").options[document.getElementById("financeira_id").selectedIndex].text,
+                valor: valorFinal,
+                taxa: limparParaBanco(taxaInput),
+                parcelas: parseInt(parcelas),
+                data: dataInicio,
+                vencimento: document.getElementById("vencimento").value,
+                usuario_id: localStorage.getItem("usuarioId") || 1
             };
 
+            if (emprestimoId) dados.status = document.getElementById("status").value;
+
+            const metodo = emprestimoId ? "PUT" : "POST";
+            const rota = emprestimoId ? `${API_URL}/editar_emprestimo/${emprestimoId}` : `${API_URL}/cadastrar_emprestimo`;
+
             try {
-                const resposta = await fetch("https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app/cadastrar_emprestimo", {
-                    method: "POST",
+                const resposta = await fetch(rota, {
+                    method: metodo,
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dados)
                 });
 
-                const resultado = await resposta.json();
-                
-                if (resultado.msg.includes("sucesso")) {
-                    alert("Sucesso! O empréstimo e o cronograma de parcelas foram gerados. ✅");
+                if (resposta.ok) {
+                    alert("Sucesso! ✅");
                     window.location.href = "emprestimos.html";
                 } else {
-                    alert("Erro ao cadastrar: " + resultado.msg);
+                    const res = await resposta.json();
+                    alert("Erro: " + (res.msg || "Falha ao salvar."));
                 }
-            } catch (e) {
-                console.error(e);
-                alert("Erro de conexão com o servidor.");
-            }
+            } catch (e) { alert("Erro de conexão."); }
         }
-    </script>
 
+        window.onload = inicializarTela;
+    </script>
 </body>
 </html>

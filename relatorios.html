@@ -14,26 +14,45 @@
 
     <div class="layout">
         <aside class="sidebar">
-            <div class="sidebar-top">
-                <div class="logo">
-                    <i class="fa-solid fa-arrow-trend-up"></i>
-                    <span>Impulso Financeiro</span>
+            <div class="logo">
+                <div id="btn-expandir" onclick="toggleSidebar()" style="cursor: pointer;">
+                    <i class="fa-solid fa-bars" id="btn-icon"></i>
                 </div>
-                <nav>
-    <a href="dashboard.html"><i class="fa-solid fa-table-columns"></i>Dashboard</a>
-    <a href="usuarios.html"><i class="fa-solid fa-users"></i>Cadastro</a>
-    <a href="emprestimos.html"><i class="fa-solid fa-building-columns"></i>Empréstimos</a>
-    <a href="contratos.html"><i class="fa-solid fa-file-contract"></i>Contratos</a>
-    <a href="cronograma.html"><i class="fa-solid fa-calendar"></i>Cronograma</a>
-    <a href="desembolsos.html"><i class="fa-solid fa-money-bill"></i>Desembolsos</a>
-    <a href="pagamentos.html"><i class="fa-solid fa-credit-card"></i>Pagamentos</a>
-    <a href="renegociacoes.html"><i class="fa-solid fa-rotate"></i>Renegociações</a>
-    <a href="notificacoes.html"><i class="fa-solid fa-bell"></i>Notificações</a>
-    <a href="relatorios.html" class="active"><i class="fa-solid fa-chart-column"></i>Relatórios</a>
-</nav>
+                <span>Impulso Financeiro</span>
             </div>
+            
+            <nav>
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="usuarios.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Cadastro</span>
+                </a>
+                <a href="financeiras.html">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Financeiras</span>
+                </a>
+                <a href="emprestimos.html">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Empréstimos</span>
+                </a>
+                <a href="notificacoes.html">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Notificações</span>
+                </a>
+                <a href="relatorios.html" class="active">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Relatórios</span>
+                </a>
+            </nav>
+
             <div class="logout">
-                <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+                <a href="#" onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sair</span>
+                </a>
             </div>
         </aside>
 
@@ -70,78 +89,81 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="card">
-                <h2>Custo Médio da Dívida</h2>
-                <table class="tabela-relatorio">
-                    <thead>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Custo</th>
-                            <th>Peso na Carteira</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Pré-fixado</td><td>12,1% a.a.</td><td>35%</td></tr>
-                        <tr><td>TJLP</td><td>7,5% a.a.</td><td>10%</td></tr>
-                    </tbody>
-                </table>
-            </div>
         </main>
     </div>
 
     <script>
-    async function carregarRelatorios() {
-        // Tenta usar localhost por padrão
-        const BASE_URL = "https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app"; 
+        // ⭐ CONTROLE DA SIDEBAR DINÂMICA
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const icon = document.getElementById('btn-icon');
 
-        try {
-            // 1. CARREGAR DÍVIDA POR CREDOR
-            const resCredores = await fetch(`${BASE_URL}/relatorio_credores`);
-            const dadosCredores = await resCredores.json();
-            const tbodyCredores = document.getElementById("tabelaCredores");
-            tbodyCredores.innerHTML = "";
+            sidebar.classList.toggle('fechada');
 
-            dadosCredores.forEach(item => {
-                const valor = Number(item.saldo_devedor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const perc = Number(item.porcentagem || 0).toFixed(1) + "%";
-                tbodyCredores.innerHTML += `<tr><td>${item.credor}</td><td>${valor}</td><td>${perc}</td></tr>`;
-            });
-
-            // 2. CARREGAR FLUXO DE CAIXA
-            const resFluxo = await fetch(`${BASE_URL}/relatorio_fluxo`);
-            const dadosFluxo = await resFluxo.json();
-            const tbodyFluxo = document.getElementById("tabelaFluxo");
-            tbodyFluxo.innerHTML = "";
-
-            if (!dadosFluxo || dadosFluxo.length === 0) {
-                tbodyFluxo.innerHTML = "<tr><td colspan='4' style='text-align:center'>Nenhuma parcela encontrada.</td></tr>";
-                return;
+            // Troca o ícone conforme o estado
+            if (sidebar.classList.contains('fechada')) {
+                icon.classList.replace('fa-bars', 'fa-arrow-right');
+            } else {
+                icon.classList.replace('fa-arrow-right', 'fa-bars');
             }
-
-            dadosFluxo.forEach(item => {
-                // CORREÇÃO: Usamos 'item.mes' porque é o que o server.js envia no objeto formatado
-                const vEntradas = Number(item.entradas || 0);
-                const vSaidas = Number(item.saidas || 0);
-                const vSaldo = Number(item.saldo || 0);
-
-                tbodyFluxo.innerHTML += `
-                    <tr>
-                        <td>${item.mes || '---'}</td>
-                        <td>${vEntradas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                        <td>${vSaidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
-                        <td style="color: ${vSaldo < 0 ? 'red' : 'green'}; font-weight: bold;">
-                            ${vSaldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                        </td>
-                    </tr>`;
-            });
-
-        } catch (e) {
-            console.error("Erro ao carregar relatórios:", e);
         }
-    }
 
-    window.onload = carregarRelatorios;
+        // ⭐ CARREGAR RELATÓRIOS DO BACKEND
+        async function carregarRelatorios() {
+            const BASE_URL = "https://projeto-empr-stimos-banc-rios-dac-ads-production.up.railway.app"; 
+
+            try {
+                // 1. CARREGAR DÍVIDA POR CREDOR
+                const resCredores = await fetch(`${BASE_URL}/relatorio_credores`);
+                const dadosCredores = await resCredores.json();
+                const tbodyCredores = document.getElementById("tabelaCredores");
+                tbodyCredores.innerHTML = "";
+
+                dadosCredores.forEach(item => {
+                    const valor = Number(item.saldo_devedor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    const perc = Number(item.porcentagem || 0).toFixed(1) + "%";
+                    tbodyCredores.innerHTML += `<tr><td>${item.credor}</td><td>${valor}</td><td>${perc}</td></tr>`;
+                });
+
+                // 2. CARREGAR FLUXO DE CAIXA
+                const resFluxo = await fetch(`${BASE_URL}/relatorio_fluxo`);
+                const dadosFluxo = await resFluxo.json();
+                const tbodyFluxo = document.getElementById("tabelaFluxo");
+                tbodyFluxo.innerHTML = "";
+
+                if (!dadosFluxo || dadosFluxo.length === 0) {
+                    tbodyFluxo.innerHTML = "<tr><td colspan='4' style='text-align:center'>Nenhuma parcela encontrada.</td></tr>";
+                    return;
+                }
+
+                dadosFluxo.forEach(item => {
+                    const vEntradas = Number(item.entradas || 0);
+                    const vSaidas = Number(item.saidas || 0);
+                    const vSaldo = Number(item.saldo || 0);
+
+                    tbodyFluxo.innerHTML += `
+                        <tr>
+                            <td>${item.mes || '---'}</td>
+                            <td>${vEntradas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                            <td>${vSaidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                            <td style="color: ${vSaldo < 0 ? 'red' : 'green'}; font-weight: bold;">
+                                ${vSaldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                            </td>
+                        </tr>`;
+                });
+
+            } catch (e) {
+                console.error("Erro ao carregar relatórios:", e);
+            }
+        }
+
+        // ⭐ LOGOUT
+        function logout() { 
+            localStorage.removeItem("usuarioLogado"); 
+            window.location.href = "index.html"; 
+        }
+
+        window.onload = carregarRelatorios;
     </script>
 </body>
 </html>
