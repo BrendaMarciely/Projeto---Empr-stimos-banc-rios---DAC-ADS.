@@ -155,12 +155,46 @@ app.delete("/excluir_emprestimo/:id", (req, res) => {
     });
 });
 
-// ================= CRUD FINANCEIRAS =================
-app.get("/listar_financeiras", (req, res) => {
-    const sql = "SELECT * FROM tbFinanceira ORDER BY financeira_id DESC";
-    conexao.query(sql, (erro, resultado) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao listar" });
-        res.json(resultado);
+// ================= CRUD FINANCEIRAS COMPLETO =================
+
+// --- BUSCAR DETALHES DE UMA FINANCEIRA ---
+app.get("/financeira_detalhes/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM tbFinanceira WHERE financeira_id = ?";
+    conexao.query(sql, [id], (erro, resultado) => {
+        if (erro || resultado.length === 0) return res.status(404).json({ msg: "Não encontrado" });
+        res.json(resultado[0]);
+    });
+});
+
+// --- CADASTRAR FINANCEIRA ---
+app.post("/cadastrar_financeira", (req, res) => {
+    const { descricao, sigla } = req.body;
+    const sql = "INSERT INTO tbFinanceira (descricao, sigla) VALUES (?, ?)";
+    conexao.query(sql, [descricao, sigla.toUpperCase()], (erro) => {
+        if (erro) return res.status(500).json({ msg: "Erro ao cadastrar" });
+        res.json({ msg: "Financeira cadastrada! ✅" });
+    });
+});
+
+// --- EDITAR FINANCEIRA ---
+app.put("/editar_financeira/:id", (req, res) => {
+    const id = req.params.id;
+    const { descricao, sigla } = req.body;
+    const sql = "UPDATE tbFinanceira SET descricao = ?, sigla = ? WHERE financeira_id = ?";
+    conexao.query(sql, [descricao, sigla.toUpperCase(), id], (erro) => {
+        if (erro) return res.status(500).json({ msg: "Erro ao atualizar" });
+        res.json({ msg: "Financeira atualizada! ✅" });
+    });
+});
+
+// --- EXCLUIR FINANCEIRA ---
+app.delete("/excluir_financeira/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM tbFinanceira WHERE financeira_id = ?";
+    conexao.query(sql, [id], (erro) => {
+        if (erro) return res.status(500).json({ msg: "Erro ao excluir" });
+        res.json({ msg: "Removida com sucesso!" });
     });
 });
 
