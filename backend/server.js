@@ -303,6 +303,78 @@ app.delete("/excluir_usuario/:id", (req, res) => {
 
 
 
+
+
+// ================= ALERTAS / NOTIFICAÇÕES =================
+app.get("/alertas_notificacoes", (req, res) => {
+
+    const sqlAtrasados = `
+        SELECT 
+            credor,
+            vencimento,
+            DATEDIFF(CURDATE(), vencimento) AS dias_diferenca
+        FROM tbContasPagar
+        WHERE vencimento < CURDATE()
+    `;
+
+    const sqlProximos = `
+        SELECT 
+            credor,
+            vencimento,
+            DATEDIFF(vencimento, CURDATE()) AS dias_diferenca
+        FROM tbContasPagar
+        WHERE vencimento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+    `;
+
+    conexao.query(sqlAtrasados, (err1, atrasados) => {
+        if (err1) return res.status(500).json({ erro: "erro atrasados" });
+
+        conexao.query(sqlProximos, (err2, proximos) => {
+            if (err2) return res.status(500).json({ erro: "erro proximos" });
+
+            res.json({
+                atrasados,
+                proximos
+            });
+        });
+    });
+});
+
+
+
+
+
+
+// ================= RELATÓRIO: FLUXO DE CAIXA =================
+app.get("/relatorio_fluxo", (req, res) => {
+
+    const sql = `
+        SELECT 
+            DATE_FORMAT(data_vencimento, '%Y-%m') AS mes,
+            SUM(valor) AS saidas,
+            0 AS entradas,
+            -SUM(valor) AS saldo
+        FROM tbContasPagar
+        GROUP BY mes
+        ORDER BY mes
+    `;
+
+    conexao.query(sql, (erro, resultado) => {
+        if (erro) {
+            console.log("Erro fluxo de caixa:", erro);
+            return res.status(500).json([]);
+        }
+        res.json(resultado);
+    });
+});
+
+
+
+
+
+
+
+
 // Railway Escolha Automática
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
