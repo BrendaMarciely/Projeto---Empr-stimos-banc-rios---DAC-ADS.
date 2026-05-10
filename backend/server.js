@@ -208,23 +208,39 @@ app.get("/financeira_detalhes/:id", (req, res) => {
     });
 });
 
-// --- CADASTRAR FINANCEIRA ---
+// --- CADASTRAR FINANCEIRA (COM VERIFICAÇÃO DE SIGLA DUPLICADA) ---
 app.post("/cadastrar_financeira", (req, res) => {
     const { descricao, sigla } = req.body;
     const sql = "INSERT INTO tbFinanceira (descricao, sigla) VALUES (?, ?)";
+    
     conexao.query(sql, [descricao, sigla.toUpperCase()], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao cadastrar" });
+        if (erro) {
+            // Verifica se o erro é de entrada duplicada
+            if (erro.code === 'ER_DUP_ENTRY') {
+                return res.status(400).json({ msg: "Esta sigla já está cadastrada para outro banco! ⚠️" });
+            }
+            console.error("Erro ao cadastrar:", erro);
+            return res.status(500).json({ msg: "Erro ao cadastrar financeira." });
+        }
         res.json({ msg: "Financeira cadastrada! ✅" });
     });
 });
 
-// --- EDITAR FINANCEIRA ---
+// --- EDITAR FINANCEIRA (COM VERIFICAÇÃO DE SIGLA DUPLICADA) ---
 app.put("/editar_financeira/:id", (req, res) => {
     const id = req.params.id;
     const { descricao, sigla } = req.body;
     const sql = "UPDATE tbFinanceira SET descricao = ?, sigla = ? WHERE financeira_id = ?";
+    
     conexao.query(sql, [descricao, sigla.toUpperCase(), id], (erro) => {
-        if (erro) return res.status(500).json({ msg: "Erro ao atualizar" });
+        if (erro) {
+            // Verifica se a nova sigla já pertence a outra financeira
+            if (erro.code === 'ER_DUP_ENTRY') {
+                return res.status(400).json({ msg: "Não foi possível atualizar: esta sigla já está em uso! ⚠️" });
+            }
+            console.error("Erro ao editar:", erro);
+            return res.status(500).json({ msg: "Erro ao atualizar financeira." });
+        }
         res.json({ msg: "Financeira atualizada! ✅" });
     });
 });

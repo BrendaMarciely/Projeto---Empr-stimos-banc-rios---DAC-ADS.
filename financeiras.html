@@ -215,34 +215,38 @@
         }
 
         document.getElementById("formFinanceira").onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById("finId").value;
-            const descricao = document.getElementById("descricao").value;
-            const sigla = document.getElementById("sigla").value;
+    e.preventDefault();
+    const id = document.getElementById("finId").value;
+    const descricao = document.getElementById("descricao").value;
+    const sigla = document.getElementById("sigla").value;
 
-            if (!validarCampos(descricao, sigla)) return;
+    if (!validarCampos(descricao, sigla)) return;
 
-            const dados = { descricao, sigla };
-            const url = id ? `${API_URL}/editar_financeira/${id}` : `${API_URL}/cadastrar_financeira`;
-            const metodo = id ? 'PUT' : 'POST';
+    const dados = { descricao, sigla };
+    const url = id ? `${API_URL}/editar_financeira/${id}` : `${API_URL}/cadastrar_financeira`;
+    const metodo = id ? 'PUT' : 'POST';
 
-            try {
-                const response = await fetch(url, {
-                    method: metodo,
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(dados)
-                });
+    try {
+        const response = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
 
-                if (response.ok) {
-                    fecharModal();
-                    await buscarFinanceiras(); // Aguarda a atualização do banco
-                } else {
-                    alert("Erro ao salvar dados no servidor.");
-                }
-            } catch (err) {
-                alert("Erro de conexão com a nuvem.");
-            }
-        };
+        const resultado = await response.json(); // Aqui pegamos o JSON enviado pelo servidor
+
+        if (response.ok) {
+            fecharModal();
+            await buscarFinanceiras();
+            alert(resultado.msg); // Exibe: "Financeira cadastrada! ✅"
+        } else {
+            // Se o status for 400 (duplicado) ou 500, exibe a mensagem que veio do backend
+            alert(resultado.msg || "Erro ao processar solicitação.");
+        }
+    } catch (err) {
+        alert("Erro de conexão com o servidor.");
+    }
+};
 
         async function editar(id) {
             try {
