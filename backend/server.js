@@ -310,32 +310,41 @@ app.get("/alertas_notificacoes", (req, res) => {
 
     const sqlAtrasados = `
         SELECT 
-            credor,
-            vencimento,
-            DATEDIFF(CURDATE(), vencimento) AS dias_diferenca
-        FROM tbContasPagar
-        WHERE vencimento < CURDATE()
+            e.credor,
+            p.data_vencimento AS vencimento,
+            DATEDIFF(CURDATE(), p.data_vencimento) AS dias_diferenca
+        FROM tbContasPagar p
+        INNER JOIN tbEmprestimos e 
+            ON e.emprestimo_id = p.emprestimo_id
+        WHERE p.data_vencimento < CURDATE()
     `;
 
     const sqlProximos = `
         SELECT 
-            credor,
-            vencimento,
-            DATEDIFF(vencimento, CURDATE()) AS dias_diferenca
-        FROM tbContasPagar
-        WHERE vencimento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+            e.credor,
+            p.data_vencimento AS vencimento,
+            DATEDIFF(p.data_vencimento, CURDATE()) AS dias_diferenca
+        FROM tbContasPagar p
+        INNER JOIN tbEmprestimos e 
+            ON e.emprestimo_id = p.emprestimo_id
+        WHERE p.data_vencimento 
+            BETWEEN CURDATE() 
+            AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
     `;
 
     conexao.query(sqlAtrasados, (err1, atrasados) => {
-        if (err1) return res.status(500).json({ erro: "erro atrasados" });
+        if (err1) {
+            console.log("Erro atrasados:", err1);
+            return res.status(500).json({ atrasados: [], proximos: [] });
+        }
 
         conexao.query(sqlProximos, (err2, proximos) => {
-            if (err2) return res.status(500).json({ erro: "erro proximos" });
+            if (err2) {
+                console.log("Erro proximos:", err2);
+                return res.status(500).json({ atrasados: [], proximos: [] });
+            }
 
-            res.json({
-                atrasados,
-                proximos
-            });
+            res.json({ atrasados, proximos });
         });
     });
 });
