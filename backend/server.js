@@ -182,6 +182,52 @@ app.get("/listar_usuarios", (req, res) => {
     });
 });
 
+
+
+// --- BUSCAR DETALHES DE UM USUÁRIO ---
+app.get("/usuario_detalhes/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT usuario_id, nome, login, perfil FROM tbUsuarios WHERE usuario_id = ?";
+    conexao.query(sql, [id], (erro, resultado) => {
+        if (erro || resultado.length === 0) return res.status(404).json({ msg: "Usuário não encontrado" });
+        res.json(resultado[0]);
+    });
+});
+
+// --- CADASTRAR NOVO USUÁRIO ---
+app.post("/cadastrar", (req, res) => {
+    const { nome, login, senha, perfil } = req.body;
+    const sql = "INSERT INTO tbUsuarios (nome, login, senha, perfil) VALUES (?, ?, ?, ?)";
+    conexao.query(sql, [nome, login, senha, perfil], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao cadastrar usuário" });
+        res.json({ mensagem: "Usuário cadastrado com sucesso!" });
+    });
+});
+
+// --- EDITAR USUÁRIO ---
+app.put("/editar_usuario/:id", (req, res) => {
+    const id = req.params.id;
+    const { nome, login, perfil } = req.body;
+    const sql = "UPDATE tbUsuarios SET nome = ?, login = ?, perfil = ? WHERE usuario_id = ?";
+    conexao.query(sql, [nome, login, perfil, id], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao atualizar usuário" });
+        res.json({ mensagem: "Usuário atualizado com sucesso!" });
+    });
+});
+
+// --- EXCLUIR USUÁRIO ---
+app.delete("/excluir_usuario/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM tbUsuarios WHERE usuario_id = ?";
+    conexao.query(sql, [id], (erro) => {
+        if (erro) return res.status(500).json({ mensagem: "Erro ao excluir usuário" });
+        res.json({ mensagem: "Usuário removido!" });
+    });
+});
+
+
+
+
 // Railway Escolha Automática
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
