@@ -173,9 +173,12 @@
         async function buscarFinanceiras() {
             try {
                 const res = await fetch(`${API_URL}/listar_financeiras`);
+                if (!res.ok) throw new Error("Falha ao buscar dados");
+                
                 const lista = await res.json();
                 const tbody = document.getElementById("listaFinanceiras");
                 tbody.innerHTML = "";
+                
                 const listaValida = Array.isArray(lista) ? lista : [];
                 document.getElementById("total-fin").innerText = listaValida.length;
                 document.getElementById("contador-registro").innerText = `${listaValida.length} instituições encontradas.`;
@@ -198,26 +201,16 @@
                         </tr>`;
                 });
             } catch (e) { 
+                console.error(e);
                 document.getElementById("contador-registro").innerText = "Erro ao conectar com o servidor.";
             }
         }
 
-        // ⭐ NOVA FUNÇÃO DE VALIDAÇÃO LOCAL
         function validarCampos(descricao, sigla) {
-            const regexRepeticao = /(.)\1{3,}/; // Bloqueia 4 ou mais letras iguais seguidas
-            
-            if (descricao.trim().length < 3) {
-                alert("O nome da instituição deve ter pelo menos 3 letras.");
-                return false;
-            }
-            if (sigla.trim().length < 2) {
-                alert("A sigla deve ter pelo menos 2 letras.");
-                return false;
-            }
-            if (regexRepeticao.test(descricao) || regexRepeticao.test(sigla)) {
-                alert("Por favor, insira um nome válido. Evite repetir letras excessivamente (ex: bbbb).");
-                return false;
-            }
+            const regexRepeticao = /(.)\1{3,}/;
+            if (descricao.trim().length < 3) { alert("O nome da instituição deve ter pelo menos 3 letras."); return false; }
+            if (sigla.trim().length < 2) { alert("A sigla deve ter pelo menos 2 letras."); return false; }
+            if (regexRepeticao.test(descricao)) { alert("Por favor, evite repetir letras excessivamente."); return false; }
             return true;
         }
 
@@ -227,43 +220,52 @@
             const descricao = document.getElementById("descricao").value;
             const sigla = document.getElementById("sigla").value;
 
-            // Executa a validação antes de enviar
             if (!validarCampos(descricao, sigla)) return;
 
-            const dados = {
-                descricao: descricao,
-                sigla: sigla
-            };
-            
+            const dados = { descricao, sigla };
             const url = id ? `${API_URL}/editar_financeira/${id}` : `${API_URL}/cadastrar_financeira`;
-            
+            const metodo = id ? 'PUT' : 'POST';
+
             try {
-                await fetch(url, {
-                    method: id ? 'PUT' : 'POST',
+                const response = await fetch(url, {
+                    method: metodo,
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(dados)
                 });
-                fecharModal();
-                buscarFinanceiras();
+
+                if (response.ok) {
+                    fecharModal();
+                    await buscarFinanceiras(); // Aguarda a atualização do banco
+                } else {
+                    alert("Erro ao salvar dados no servidor.");
+                }
             } catch (err) {
-                alert("Erro ao salvar dados.");
+                alert("Erro de conexão com a nuvem.");
             }
         };
 
         async function editar(id) {
-            const res = await fetch(`${API_URL}/financeira_detalhes/${id}`);
-            const f = await res.json();
-            document.getElementById("finId").value = f.financeira_id;
-            document.getElementById("descricao").value = f.descricao;
-            document.getElementById("sigla").value = f.sigla;
-            document.getElementById("modalTitulo").innerText = "Editar Instituição";
-            document.getElementById("modalFinanceira").style.display = "block";
+            try {
+                const res = await fetch(`${API_URL}/financeira_detalhes/${id}`);
+                const f = await res.json();
+                document.getElementById("finId").value = f.financeira_id;
+                document.getElementById("descricao").value = f.descricao;
+                document.getElementById("sigla").value = f.sigla;
+                document.getElementById("modalTitulo").innerText = "Editar Instituição";
+                document.getElementById("modalFinanceira").style.display = "block";
+            } catch (e) { alert("Erro ao carregar detalhes da instituição."); }
         }
 
         async function excluir(id) {
-            if(confirm("Deseja realmente excluir?")) {
-                await fetch(`${API_URL}/excluir_financeira/${id}`, { method: 'DELETE' });
-                buscarFinanceiras();
+            if(confirm("Deseja realmente excluir esta instituição?")) {
+                try {
+                    const res = await fetch(`${API_URL}/excluir_financeira/${id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        await buscarFinanceiras(); // Aguarda a atualização do banco
+                    } else {
+                        alert("Não foi possível excluir a instituição.");
+                    }
+                } catch (e) { alert("Erro ao processar exclusão."); }
             }
         }
 
@@ -285,18 +287,21 @@
 
         function fecharModal() { document.getElementById("modalFinanceira").style.display = "none"; }
         function logout() { window.location.href = "index.html"; }
+
         function gerarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.text("Relatório de Instituições Financeiras", 14, 15);
             doc.autoTable({
-                startY: 20, head: [['ID', 'Nome', 'Sigla']],
+                startY: 20, 
+                head: [['ID', 'Nome', 'Sigla']],
                 body: Array.from(document.querySelectorAll("#listaFinanceiras tr")).map(tr => [
                     tr.cells[0].innerText, tr.cells[1].innerText, tr.cells[2].innerText
                 ])
             });
             doc.save("financeiras.pdf");
         }
+
         window.onload = buscarFinanceiras;
     </script>
 </body>
