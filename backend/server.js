@@ -356,27 +356,46 @@ app.get("/alertas_notificacoes", (req, res) => {
 
 // ================= RELATÓRIO: FLUXO DE CAIXA =================
 app.get("/relatorio_fluxo", (req, res) => {
-
+    // Usamos STR_TO_DATE para converter o seu INT em data antes de formatar
     const sql = `
         SELECT 
-            DATE_FORMAT(data_vencimento, '%Y-%m') AS mes,
-            SUM(valor) AS saidas,
+            DATE_FORMAT(CAST(data_vencimento AS CHAR), '%Y-%m') AS mes,
+            SUM(IFNULL(valor, 0)) AS saidas,
             0 AS entradas,
-            -SUM(valor) AS saldo
+            -SUM(IFNULL(valor, 0)) AS saldo
         FROM tbContasPagar
         GROUP BY mes
-        ORDER BY mes
+        ORDER BY mes ASC
     `;
 
     conexao.query(sql, (erro, resultado) => {
         if (erro) {
-            console.log("Erro fluxo de caixa:", erro);
+            console.error("Erro fluxo:", erro);
             return res.status(500).json([]);
         }
         res.json(resultado);
     });
 });
 
+
+app.get("/relatorio_credores", (req, res) => {
+    const sql = `
+        SELECT 
+            credor, 
+            SUM(valor) as saldo_devedor,
+            (SUM(valor) / (SELECT SUM(valor) FROM tbEmprestimos WHERE status = 'Ativo') * 100) as porcentagem
+        FROM tbEmprestimos
+        WHERE status = 'Ativo'
+        GROUP BY credor
+    `;
+    conexao.query(sql, (erro, resultado) => {
+        if (erro) {
+            console.error("Erro credores:", erro);
+            return res.status(500).json([]);
+        }
+        res.json(resultado);
+    });
+});
 
 
 
