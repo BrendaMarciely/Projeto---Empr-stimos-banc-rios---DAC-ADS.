@@ -239,6 +239,9 @@ app.delete("/excluir_financeira/:id", (req, res) => {
     });
 });
 
+
+
+
 // ================= LOGIN & USUÁRIOS =================
 app.post("/login", (req, res) => {
     const { login, senha } = req.body;
@@ -269,12 +272,23 @@ app.get("/usuario_detalhes/:id", (req, res) => {
     });
 });
 
-// --- CADASTRAR NOVO USUÁRIO ---
+// --- CADASTRAR NOVO USUÁRIO (VERSÃO CORRIGIDA) ---
 app.post("/cadastrar", (req, res) => {
     const { nome, login, senha, perfil } = req.body;
     const sql = "INSERT INTO tbUsuarios (nome, login, senha, perfil) VALUES (?, ?, ?, ?)";
+    
     conexao.query(sql, [nome, login, senha, perfil], (erro) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao cadastrar usuário" });
+        if (erro) {
+            // Verifica se o erro é de entrada duplicada (Código ER_DUP_ENTRY do MySQL)
+            if (erro.code === 'ER_DUP_ENTRY') {
+                console.log("⚠️ Tentativa de cadastro com login duplicado:", login);
+                return res.status(400).json({ mensagem: "Este Login/E-mail já está cadastrado. Por favor, use outro." });
+            }
+            
+            console.error("❌ Erro no banco:", erro.message);
+            return res.status(500).json({ mensagem: "Erro interno ao cadastrar usuário." });
+        }
+        
         res.json({ mensagem: "Usuário cadastrado com sucesso!" });
     });
 });
@@ -284,8 +298,15 @@ app.put("/editar_usuario/:id", (req, res) => {
     const id = req.params.id;
     const { nome, login, perfil } = req.body;
     const sql = "UPDATE tbUsuarios SET nome = ?, login = ?, perfil = ? WHERE usuario_id = ?";
+    
     conexao.query(sql, [nome, login, perfil, id], (erro) => {
-        if (erro) return res.status(500).json({ mensagem: "Erro ao atualizar usuário" });
+        if (erro) {
+            // Trata duplicidade também na edição
+            if (erro.code === 'ER_DUP_ENTRY') {
+                return res.status(400).json({ mensagem: "Este Login/E-mail já pertence a outro usuário." });
+            }
+            return res.status(500).json({ mensagem: "Erro ao atualizar usuário" });
+        }
         res.json({ mensagem: "Usuário atualizado com sucesso!" });
     });
 });
@@ -310,41 +331,32 @@ app.get("/alertas_notificacoes", (req, res) => {
 
     const sqlAtrasados = `
         SELECT 
-            e.credor,
-            p.data_vencimento AS vencimento,
-            DATEDIFF(CURDATE(), p.data_vencimento) AS dias_diferenca
-        FROM tbContasPagar p
-        INNER JOIN tbEmprestimos e 
-            ON e.emprestimo_id = p.emprestimo_id
-        WHERE p.data_vencimento < CURDATE()
+            credor,
+            vencimento,
+            DATEDIFF(CURDATE(), vencimento) AS dias_diferenca
+        FROM tbContasPagar
+        WHERE vencimento < CURDATE()
     `;
 
     const sqlProximos = `
         SELECT 
-            e.credor,
-            p.data_vencimento AS vencimento,
-            DATEDIFF(p.data_vencimento, CURDATE()) AS dias_diferenca
-        FROM tbContasPagar p
-        INNER JOIN tbEmprestimos e 
-            ON e.emprestimo_id = p.emprestimo_id
-        WHERE p.data_vencimento 
-            BETWEEN CURDATE() 
-            AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+            credor,
+            vencimento,
+            DATEDIFF(vencimento, CURDATE()) AS dias_diferenca
+        FROM tbContasPagar
+        WHERE vencimento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
     `;
 
     conexao.query(sqlAtrasados, (err1, atrasados) => {
-        if (err1) {
-            console.log("Erro atrasados:", err1);
-            return res.status(500).json({ atrasados: [], proximos: [] });
-        }
+        if (err1) return res.status(500).json({ erro: "erro atrasados" });
 
         conexao.query(sqlProximos, (err2, proximos) => {
-            if (err2) {
-                console.log("Erro proximos:", err2);
-                return res.status(500).json({ atrasados: [], proximos: [] });
-            }
+            if (err2) return res.status(500).json({ erro: "erro proximos" });
 
-            res.json({ atrasados, proximos });
+            res.json({
+                atrasados,
+                proximos
+            });
         });
     });
 });
@@ -356,46 +368,27 @@ app.get("/alertas_notificacoes", (req, res) => {
 
 // ================= RELATÓRIO: FLUXO DE CAIXA =================
 app.get("/relatorio_fluxo", (req, res) => {
-    // Usamos STR_TO_DATE para converter o seu INT em data antes de formatar
+
     const sql = `
         SELECT 
-            DATE_FORMAT(CAST(data_vencimento AS CHAR), '%Y-%m') AS mes,
-            SUM(IFNULL(valor, 0)) AS saidas,
+            DATE_FORMAT(data_vencimento, '%Y-%m') AS mes,
+            SUM(valor) AS saidas,
             0 AS entradas,
-            -SUM(IFNULL(valor, 0)) AS saldo
+            -SUM(valor) AS saldo
         FROM tbContasPagar
         GROUP BY mes
-        ORDER BY mes ASC
+        ORDER BY mes
     `;
 
     conexao.query(sql, (erro, resultado) => {
         if (erro) {
-            console.error("Erro fluxo:", erro);
+            console.log("Erro fluxo de caixa:", erro);
             return res.status(500).json([]);
         }
         res.json(resultado);
     });
 });
 
-
-app.get("/relatorio_credores", (req, res) => {
-    const sql = `
-        SELECT 
-            credor, 
-            SUM(valor) as saldo_devedor,
-            (SUM(valor) / (SELECT SUM(valor) FROM tbEmprestimos WHERE status = 'Ativo') * 100) as porcentagem
-        FROM tbEmprestimos
-        WHERE status = 'Ativo'
-        GROUP BY credor
-    `;
-    conexao.query(sql, (erro, resultado) => {
-        if (erro) {
-            console.error("Erro credores:", erro);
-            return res.status(500).json([]);
-        }
-        res.json(resultado);
-    });
-});
 
 
 
