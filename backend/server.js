@@ -157,6 +157,47 @@ app.delete("/excluir_emprestimo/:id", (req, res) => {
 
 // ================= CRUD FINANCEIRAS COMPLETO =================
 
+
+
+// --- LISTAR FINANCEIRAS ---
+app.get("/listar_financeiras", (req, res) => {
+
+    const sql = `
+        SELECT financeira_id, descricao, sigla
+        FROM tbFinanceira
+        ORDER BY descricao ASC
+    `;
+
+    conexao.query(sql, (erro, resultado) => {
+
+        if (erro) {
+            console.log("Erro ao listar financeiras:", erro);
+            return res.status(500).json([]);
+        }
+
+        res.json(resultado);
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // --- BUSCAR DETALHES DE UMA FINANCEIRA ---
 app.get("/financeira_detalhes/:id", (req, res) => {
     const id = req.params.id;
