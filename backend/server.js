@@ -327,36 +327,32 @@ app.delete("/excluir_usuario/:id", (req, res) => {
 
 
 // ================= ALERTAS / NOTIFICAÇÕES =================
-app.get("/alertas_notificacoes", (req, res) => {
-
+app.get("/alertas_notificacoes", (req, res) => { // Corrigido de aapp para app
     const sqlAtrasados = `
         SELECT 
-            credor,
-            vencimento,
-            DATEDIFF(CURDATE(), vencimento) AS dias_diferenca
-        FROM tbContasPagar
-        WHERE vencimento < CURDATE()
+            e.credor,
+            p.data_vencimento,
+            DATEDIFF(CURDATE(), STR_TO_DATE(p.data_vencimento, '%Y%m%d')) AS dias_diferenca
+        FROM tbContasPagar p
+        INNER JOIN tbEmprestimos e ON p.emprestimo_id = e.emprestimo_id
+        WHERE p.data_vencimento < REPLACE(CURDATE(), '-', '')
     `;
 
     const sqlProximos = `
         SELECT 
-            credor,
-            vencimento,
-            DATEDIFF(vencimento, CURDATE()) AS dias_diferenca
-        FROM tbContasPagar
-        WHERE vencimento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+            e.credor,
+            p.data_vencimento,
+            DATEDIFF(STR_TO_DATE(p.data_vencimento, '%Y%m%d'), CURDATE()) AS dias_diferenca
+        FROM tbContasPagar p
+        INNER JOIN tbEmprestimos e ON p.emprestimo_id = e.emprestimo_id
+        WHERE p.data_vencimento BETWEEN REPLACE(CURDATE(), '-', '') AND REPLACE(DATE_ADD(CURDATE(), INTERVAL 15 DAY), '-', '')
     `;
 
     conexao.query(sqlAtrasados, (err1, atrasados) => {
-        if (err1) return res.status(500).json({ erro: "erro atrasados" });
-
+        if (err1) return res.status(500).json({ erro: err1.message });
         conexao.query(sqlProximos, (err2, proximos) => {
-            if (err2) return res.status(500).json({ erro: "erro proximos" });
-
-            res.json({
-                atrasados,
-                proximos
-            });
+            if (err2) return res.status(500).json({ erro: err2.message });
+            res.json({ atrasados, proximos });
         });
     });
 });
@@ -365,13 +361,12 @@ app.get("/alertas_notificacoes", (req, res) => {
 
 
 
-
 // ================= RELATÓRIO: FLUXO DE CAIXA =================
 app.get("/relatorio_fluxo", (req, res) => {
-
+    // Convertendo o INT para formato de data para o DATE_FORMAT funcionar
     const sql = `
         SELECT 
-            DATE_FORMAT(data_vencimento, '%Y-%m') AS mes,
+            DATE_FORMAT(STR_TO_DATE(data_vencimento, '%Y%m%d'), '%Y-%m') AS mes,
             SUM(valor) AS saidas,
             0 AS entradas,
             -SUM(valor) AS saldo
@@ -381,8 +376,27 @@ app.get("/relatorio_fluxo", (req, res) => {
     `;
 
     conexao.query(sql, (erro, resultado) => {
+        if (erro) return res.status(500).json([]);
+        res.json(resultado);
+    });
+});
+
+
+// ================= RELATÓRIO: DÍVIDA POR CREDOR =================
+app.get("/relatorio_credores", (req, res) => {
+    const sql = `
+        SELECT 
+            credor, 
+            SUM(valor) AS saldo_devedor,
+            ROUND((SUM(valor) / (SELECT SUM(valor) FROM tbEmprestimos WHERE status = 'Ativo') * 100), 1) AS porcentagem
+        FROM tbEmprestimos 
+        WHERE status = 'Ativo'
+        GROUP BY credor
+    `;
+
+    conexao.query(sql, (erro, resultado) => {
         if (erro) {
-            console.log("Erro fluxo de caixa:", erro);
+            console.log("Erro relatorio credores:", erro);
             return res.status(500).json([]);
         }
         res.json(resultado);
