@@ -162,19 +162,21 @@
                 });
 
                 const dados = await resposta.json();
+                
+                // Pega o texto idependente se o back-end mandou como 'mensagem' ou 'msg'
+                const textoMensagem = dados.mensagem || dados.msg || "";
 
-                if (resposta.ok && dados.msg.toLowerCase().includes("sucesso")) {
-                    alert("✅ " + dados.msg);
+                if (resposta.ok && textoMensagem.toLowerCase().includes("sucesso")) {
+                    alert("✅ " + textoMensagem);
                     window.location.href = "login.html";
                 } else {
-                    alert("❌ " + dados.msg);
+                    alert("❌ " + (textoMensagem || "Erro ao cadastrar usuário."));
                 }
 
             } catch (e) {
                 alert("Erro ao conectar com o servidor.");
                 console.log(e);
             }
-        }
     </script>
 
 </body>
