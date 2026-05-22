@@ -83,7 +83,7 @@
                     <option value="Financeira Externa">Financeira Externa</option>
                 </select>
 
-                <button type="button" onclick="cadastrar()">Criar Conta</button>
+                <button type="submit">Criar Conta</button>
 
             </form>
 
@@ -96,17 +96,25 @@
     </div>
 
     <script>
-        // Função para mostrar/esconder senha
+        // CORREÇÃO DO OLHO: Altera o tipo do input e manipula as classes do FontAwesome da forma recomendada
         function toggleVisibility(id, el) {
             const input = document.getElementById(id);
             if (input.type === "password") {
                 input.type = "text";
-                el.classList.replace("fa-eye", "fa-eye-slash");
+                el.classList.remove("fa-eye");
+                el.classList.add("fa-eye-slash");
             } else {
                 input.type = "password";
-                el.classList.replace("fa-eye-slash", "fa-eye");
+                el.classList.remove("fa-eye-slash");
+                el.classList.add("fa-eye");
             }
         }
+
+        // Monitora o envio do formulário, prevenindo comportamentos inesperados do navegador
+        document.getElementById("formCadastro").addEventListener("submit", function(event) {
+            event.preventDefault();
+            cadastrar();
+        });
 
         async function cadastrar() {
             const nomeInput = document.getElementById("nome").value.trim();
@@ -134,7 +142,7 @@
                 return;
             }
 
-            // --- 3. VALIDAÇÃO DE E-MAIL (SEM ACENTOS) ---
+            // --- 3. VALIDAÇÃO DE E-MAIL ---
             const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
             if (!regexEmail.test(login)) {
                 alert("❌ E-mail inválido! Não utilize acentos ou caracteres especiais.");
@@ -148,9 +156,9 @@
                 return;
             }
 
-            // --- 5. CONCORDÂNCIA DE SENHA ---
+            // --- 5. LEMBRETE E VALIDAÇÃO DA CONCORDÂNCIA DE SENHA ---
             if (senha !== confirmar) {
-                alert("❌ As senhas não coincidem.");
+                alert("❌ As senhas não coincidem. Por favor, confirme a mesma senha digitada no campo anterior.");
                 return;
             }
 
@@ -163,20 +171,22 @@
 
                 const dados = await resposta.json();
                 
-                // Pega o texto idependente se o back-end mandou como 'mensagem' ou 'msg'
-                const textoMensagem = dados.mensagem || dados.msg || "";
+                // Mapeia todas as possíveis variações de retorno do back-end
+                const textoMensagem = dados.mensagem || dados.msg || dados.message || "";
 
-                if (resposta.ok && textoMensagem.toLowerCase().includes("sucesso")) {
-                    alert("✅ " + textoMensagem);
+                if (resposta.ok) {
+                    alert("✅ " + (textoMensagem || "Usuário cadastrado com sucesso!"));
                     window.location.href = "login.html";
                 } else {
-                    alert("❌ " + (textoMensagem || "Erro ao cadastrar usuário."));
+                    // Exibe a mensagem de erro específica vinda do banco ou back-end (ex: E-mail já cadastrado)
+                    alert("❌ Falha ao cadastrar: " + (textoMensagem || "Verifique as informações fornecidas."));
                 }
 
             } catch (e) {
                 alert("Erro ao conectar com o servidor.");
                 console.log(e);
             }
+        }
     </script>
 
 </body>
