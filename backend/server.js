@@ -9,20 +9,18 @@ app.use(cors())
 app.use(express.json())
 
 // ================= CONEXÃO =================
-const conexao = mysql.createConnection({
+
+const conexao = mysql.createPool({
     host: "crossover.proxy.rlwy.net",
     user: "root",
     password: "AoiBmJQWLOwFvyGzVoFcWwsVibRAUFTI",
     database: "railway",
-    port: 26823
-})
-
-conexao.connect((erro) => {
-    if (erro) {
-        console.log("❌ Erro ao conectar no banco:", erro.message)
-    } else {
-        console.log("✅ Conectado ao banco Railway")
-    }
+    port: 26823,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000
 })
 
 // ================= DASHBOARD (FILTRANDO APENAS ATIVOS) =================
