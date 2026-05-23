@@ -62,6 +62,11 @@ app.put("/editar_emprestimo/:id", (req, res) => {
     const id = req.params.id;
     const { valor, taxa, status } = req.body;
     
+    // 🛑 VALIDAÇÃO: Impede valores maiores que 100 milhões para não quebrar o sistema
+    if (valor > 100000000) {
+        return res.status(400).json({ msg: "O valor do empréstimo não pode ser maior que R$ 100.000.000,00" });
+    }
+    
     const sql = `
         UPDATE tbEmprestimos 
         SET valor = ?, taxa_juros = ?, status = ?, atualizado_em = NOW() 

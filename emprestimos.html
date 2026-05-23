@@ -290,29 +290,42 @@
         function fecharModal() { document.getElementById("modalEditar").style.display = "none"; }
 
         document.getElementById("formEditar").onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById("editId").value;
-            const dados = {
-                valor: limparParaBanco(document.getElementById("editValor").value),
-                taxa: limparParaBanco(document.getElementById("editTaxa").value),
-                status: document.getElementById("editStatus").value
-            };
+    e.preventDefault();
+    const id = document.getElementById("editId").value;
+    const dados = {
+        valor: limparParaBanco(document.getElementById("editValor").value),
+        taxa: limparParaBanco(document.getElementById("editTaxa").value),
+        status: document.getElementById("editStatus").value
+    };
 
-            try {
-                const res = await fetch(`${API_URL}/editar_emprestimo/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dados)
-                });
-                if (res.ok) { 
-                    alert("Empréstimo atualizado com sucesso! ✅");
-                    fecharModal(); 
-                    carregarEmprestimos(); 
-                } else {
-                    alert("Erro ao salvar alterações.");
-                }
-            } catch (e) { alert("Falha na conexão com o servidor."); }
-        };
+    // 🛑 TRAVA DO FRONT-END: Alerta visual se o valor passar de 100 milhões
+    if (dados.valor > 100000000) {
+        alert("❌ O valor do empréstimo não pode ser maior que R$ 100.000.000,00");
+        return; // Para a execução aqui e não envia para o servidor
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/editar_emprestimo/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+        
+        // Lê a resposta do servidor caso o back-end barre algo
+        const respostaDados = await res.json();
+
+        if (res.ok) { 
+            alert("Empréstimo atualizado com sucesso! ✅");
+            fecharModal(); 
+            carregarEmprestimos(); 
+        } else {
+            // Exibe a mensagem exata de erro que o back-end enviar
+            alert("❌ " + (respostaDados.msg || "Erro ao salvar alterações."));
+        }
+    } catch (e) { 
+        alert("Falha na conexão com o servidor."); 
+    }
+};
 
         function gerarPDFEmprestimos() {
             const { jsPDF } = window.jspdf;
