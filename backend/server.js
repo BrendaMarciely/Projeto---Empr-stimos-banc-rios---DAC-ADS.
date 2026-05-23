@@ -130,23 +130,53 @@ app.get("/listar_emprestimos", (req, res) => {
     });
 });
 
-// ================= EXCLUIR EMPRÉSTIMO + PARCELAS =================
+// ================= EXCLUIR EMPRÉSTIMO + PARCELAS (CORRIGIDO PARA POOL) =================
 app.delete("/excluir_emprestimo/:id", (req, res) => {
     const id = req.params.id;
-    conexao.beginTransaction((errB) => {
-        if (errB) return res.status(500).json({ msg: "Erro ao processar" });
 
-        const sqlParcelas = "DELETE FROM tbContasPagar WHERE emprestimo_id = ?";
-        conexao.query(sqlParcelas, [id], (erroP) => {
-            if (erroP) return conexao.rollback(() => res.status(500).json({ msg: "Erro nas parcelas" }));
+    // 1. Solicita uma conexão exclusiva do pool para a transação
+    conexao.getConnection((err, conn) => {
+        if (err) {
+            console.error("❌ Erro ao obter conexão do pool:", err);
+            return res.status(500).json({ msg: "Erro no servidor ao processar exclusão" });
+        }
 
-            const sqlEmprestimo = "DELETE FROM tbEmprestimos WHERE emprestimo_id = ?";
-            conexao.query(sqlEmprestimo, [id], (erroE) => {
-                if (erroE) return conexao.rollback(() => res.status(500).json({ msg: "Erro no empréstimo" }));
+        // 2. Inicia a transação na conexão aberta (conn)
+        conn.beginTransaction((errB) => {
+            if (errB) {
+                conn.release(); // Sempre devolva a conexão se falhar aqui
+                return res.status(500).json({ msg: "Erro ao processar transação" });
+            }
 
-                conexao.commit((errC) => {
-                    if (errC) return conexao.rollback(() => res.status(500).json({ msg: "Erro final" }));
-                    res.json({ msg: "Removido com sucesso! ✅" });
+            const sqlParcelas = "DELETE FROM tbContasPagar WHERE emprestimo_id = ?";
+            conn.query(sqlParcelas, [id], (erroP) => {
+                if (erroP) {
+                    return conn.rollback(() => {
+                        conn.release(); // Libera a conexão no rollback
+                        res.status(500).json({ msg: "Erro nas parcelas" });
+                    });
+                }
+
+                const sqlEmprestimo = "DELETE FROM tbEmprestimos WHERE emprestimo_id = ?";
+                conn.query(sqlEmprestimo, [id], (erroE) => {
+                    if (erroE) {
+                        return conn.rollback(() => {
+                            conn.release(); // Libera a conexão no rollback
+                            res.status(500).json({ msg: "Erro no empréstimo" });
+                        });
+                    }
+
+                    // 3. Confirma as alterações se tudo correr bem
+                    conn.commit((errC) => {
+                        if (errC) {
+                            return conn.rollback(() => {
+                                conn.release();
+                            });
+                        }
+                        
+                        conn.release(); // ⚠️ ESSENCIAL: Devolve a conexão limpa para o pool
+                        res.json({ msg: "Removido com sucesso! ✅" });
+                    });
                 });
             });
         });
